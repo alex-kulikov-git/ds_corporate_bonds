@@ -1,0 +1,28 @@
+\section{Introduction: Hyperledger Fabric}
+In this first introductory chapter, we want to provide a brief overview about the original Hyperledger project and its history as well as to elaborate on potential use cases for the Hyperledger Fabric subproject.
+
+\subsection{History of Hyperledger and Partners}
+With the intention of developing industrial large-scale Blockchain applications, the Hyperledger project was initially founded by 30 companies in 2016 \cite{Hyperledger2019}. The initial founding members, companies as i.a. IBM, Cisco, J.P. Morgan, Deutsche B{\"o}rse Group, set up the Hyperledger project to enforce trust, accountability and full transparency among business partners \cite{TheLinuxFoundation2016}. Today, over 250 parties from varying industries are involved in the development of the venture which is hosted by the Linux Foundation \cite{TheLinuxFoundation2018}. \\ 
+The very fast developing open source project utilizes a distributed ledger technology which ensures a transparent, decentralized, and shared cross-industry open standard. Having a high potential at the interface of various industries, the drawback of Blockchain technology is that there is no so-called one-size-fits-all approach. In order to find a solution to this problem, Hyperledger understands itself as a greenhouse for open source Blockchain development that unites companies and developers with the appropriate technologies \cite[p. 8]{Blummer2018}.  Currently, Hyperledger Fabric is only one out of 15 subprojects within Hyperledger and can be understood as a permissioned network with decentralized trust, where the parties know each other \cite{Fabric2019}. Based on a very active community, the current Hyperledger Fabric version supports different programming languages and offers a modular toolbox with basic building blocks. This enables rapid implementation of architectures which can be highly specialized and specifically designed for a given use case.
+
+
+\subsection{Classification and Differentiation from other Blockchain Systems}
+%In general, blockchain technology can be used to set up a distributed network of mutually untrusting peers and to implement transactions between them. 
+Blockchain systems can be \textit{permissionless} or \textit{permissioned}. In \textit{permissionless} blockchain systems, anyone can join and participate in the network freely. \textit{Permissioned} blockchains, on the other hand, have strict policies, determining which parties are allowed to join the network, and which permissions and privileges are assigned to them. \\
+Hyperledger Fabric is designed as a permissioned platform to set up private and consortium Blockchain networks with modular consensus that is not hard-coded in contrast to most other blockchain systems \cite{Vukolic2017}. Fabric does not include a cryptocurrency by default, as it is in most cases not relevant for business applications, and would create unnecessary performance overhead at transaction processing. The project was specifically created for B2B applications and is - as a permissioned Blockchain - able to utilize the traditional Byzantine-fault-tolerant consensus since the participants are identified \cite{Androulaki2018}.
+Because the validation of transactions in permissioned blockchain systems is conducted by a subset of verified peers, private systems tend to have a higher throughput. Referring to Dinh et al. \cite{Dinh2017}, Hyperledger Fabric is currently the fastest private open-source blockchain platform.
+Recent work examined that Fabric 1.2. is able to execute around 3,000 transactions per second \textit{(tps)}, and that it is possible to even achieve 20,000 tps by restructuring the underlying blockchain architecture \cite{Gorenflo2019a}. To differentiate Fabric from other common blockchain solutions, Fig. \ref{fig:blockchain-comparison} shows differences and similarities between \textit{Hyperledger Fabric}, \textit{Bitcoin}, \textit{Ethereum} and \textit{R3 Corda}. 
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1\linewidth]{blockchain-comparison.png}
+	\caption{Comparison of Hyperledger Fabric to Bitcoin, Ethereum, and R3 Corda. }
+	\label{fig:blockchain-comparison}
+	\Description[Comparison]{Comparison of Hyperledger Fabric to Bitcoin, Ethereum, and R3 Corda. }
+	\vspace{-3mm} % reduce space after figure
+\end{figure}
+
+\subsection{Potential Use Cases of Fabric}
+As a permissioned blockchain, Hyperledger Fabric can be utilized where privacy, transparency as well as the need for efficient transaction processing are paramount. This makes Fabric especially interesting for high-scaling finance, manufacturing, banking, IoT and insurance applications with high security standards \cite{Fabric2019}. In general, Fabric allows to tackle broad supply or production chain management problems with partners from multiple industries or locations. \\
+Shortly after the Hyperledger project was launched, IBM started a pilot project with Walmart using Fabric to trace food and to guarantee transparency throughout the entire supply chain. While Walmart aims to detect bacteria or defects, their customers are able to track products back to the manufacturer \cite{Aitken2017}. Potentially saving lives, the traceability of food is especially important when it needs to be recalled due to production and processing defects. \\
+Another interesting project from Ichikawa et al. \cite{Ichikawa2017} features the implementation of a digital passport for personal health data. Introducing an increased level of security while providing an accessible system at the same time, the Japanese researchers introduced a mobile application that exchanges health data by connecting to a private Hyperledger Fabric blockchain network.
