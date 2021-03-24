@@ -1,0 +1,64 @@
+% The titlepage for the CAMP report document.
+% Included by MAIN.TEX
+
+
+%--------------------------------------------------
+% The title page
+%--------------------------------------------------
+
+% correct BCOR - undo at the end !!!
+\def\bcorcor{0.15cm}
+\addtolength{\hoffset}{\bcorcor}
+
+\thispagestyle{empty}
+
+ \vspace{10mm}
+\begin{center}
+	       \oTUM{4cm}
+	   
+	   \vspace{5mm}     
+	   \huge DEPARTMENT OF FINANCE\\ 
+	   \vspace{0.5cm}
+	 \large TECHNICAL UNIVERSITY OF MUNICH\\
+        
+	\end{center}
+		
+
+\vspace{10mm}
+\begin{center}
+
+   {\Large \doctype}
+
+  \vspace{10mm}
+  
+  {\LARGE \title}\\
+  
+  
+  \vspace{10mm}
+  
+  
+  {\LARGE  \titleGer}\\
+  
+  
+  \vspace{10mm}
+
+    %\hfill
+    \begin{tabular}{ll}
+	   \Large Author:     & \Large \author \\[2mm]
+	   \Large Supervisor:    & \Large Prof. Dr. Sebastian M\"{u}ller \\[2mm]				
+	   \Large Advisor:	& \Large Zihan Gong \\[2mm]
+	   \Large Date:       & \Large March 31, 2021
+	 \end{tabular}
+	 
+	 \vspace{5mm}
+	 
+	 \begin{figure}[h!]
+  \centering
+   \includegraphics[width=4cm]{styles/informat.png}
+  \end{figure}
+   
+
+\end{center}
+
+% undo BCOR correction
+\addtolength{\hoffset}{\bcorcor}

@@ -1,0 +1,19 @@
+\chapter{Introduction} \label{chapter:Introduction}
+Assume that you have recently graduated from university and are looking for a new apartment to move in. As a young professional your requirements for the apartment are low rent and short distance to city center. This way, you can pay less at the beginning, and are well-positioned to attend job interviews all over the city. In order to narrow down your options, you want the original set of apartments to be reduced according to your priorities. Hence, you rely on the database, where the apartments are stored, to determine the options that are \textit{interesting} for you. An apartment is defined as interesting when it is not worse than any other apartment in terms of rent and distance to city center. The resulting set of interesting apartments is called the \textit{skyline}. The term skyline was originally chosen in resemblance to a skyline of buildings, meaning those that are not lower than the others in the same horizontal location. % insert a picture of skyline for illustration here
+Having determined the apartments that are interesting according to your requirements of low rent and short distance to city center, you can now choose the one particular apartment that suits your personal preferences best. 
+%From a more theoretical standpoint, a skyline of a set of vectors consists of those vectors that are not worse than any other vector in every given dimension. 
+
+% TODO: Maybe a bit more on application areas
+ 
+\section{Motivation}
+% Was soll diese Arbeit bewirken und warum ist sie relevant?
+Various online services have seen a significant rise in popularity in the last several years. The application areas range from flight booking to apartment rental. At the roots of any such service there is a massive database, containing relevant information on every item of the underlying dataset. In order to extract the database entires that are required for a particular use case, different operators can be applied to the dataset. One of the most useful filtering operators is the skyline operator. While multiple algorithms have been developed to efficiently compute the skyline of a set of tuples, there are still some optimization aspects that have not yet been covered by extensive research. 
+
+This work in specific takes aim at reducing the computation time of some of the most prominent skyline algorithms by parallelizing them for modern CPU architectures. In addition to that, a novel skyline algorithm called SARTS is presented, which exploits the highly efficient memory usage of the ART tree \cite{art}. The algorithm was developed specifically for datasets based on categorical attributes and makes use of some modern optimization approaches in this area. 
+
+\section{Methods}
+% Gliederung der Arbeit
+The present work is organized as following. At first, the necessary preliminaries with focus on the skyline operator are given. A brief overview of related work and the existing skyline algorithms takes place, with special emphasis on Naive- and Block-Nested-Loops, Divide-and-Conquer and ST-S algorithms. Hereafter, this paper briefly reviews the main advantages of the ART tree in the context of databases, and proposes a novel skyline algorithm called SARTS, which makes efficient use of the tree for dominance checks. The new algorithm and its implementation approaches are presented in greater detail. Afterwards, some of the modern parallelization techniques are first explained and then applied to the given skyline algorithms. At this point, two different query pipelining models are introduced: volcano and produce/consume. Then, an evaluation of this work's results takes place. For this purpose, various performance tests are conducted and their outcomes discussed. In the conclusion to this work, the main results and proposals of the paper are once again summarized, and an outlook to possible future work is given. 
+ 
+
+

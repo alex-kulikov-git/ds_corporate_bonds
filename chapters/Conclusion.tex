@@ -1,0 +1,25 @@
+\chapter{Conclusion}
+\label{chapter:Conclusion}
+
+\section{Summary}
+In this work, three of the basic skyline algorithms Naive-Nested-Loops, Block-Nested-Loops and Divide-and-Conquer, as well as the newer ST-S algorithm were introduced. The algorithms were placed into the ``big picture'' of the current state-of-the-art skyline algorithms and explained in detail. Thereafter, the novel skyline algorithm SARTS, which utilizes the highly efficient ART tree, was presented. The algorithm keeps all the advantages of ST-S, while being significantly more memory-efficient at the same time. The algorithms were parallelized using different approaches and frameworks, which were explained in greater detail. In the last chapter, an evaluation of the conducted tests was carried out and the outcomes analyzed. 
+
+With the results of this work, the following points should be considered when choosing the right skyline algorithm for the particular use case: 
+\begin{itemize}
+	\item When the application scenario assumes continuous attribute values and does not require progressive behavior, then Block-Nested-Loops seems to be a very potent ``all-rounder'' algorithm, well suited for both I/O-intensive as well as in-memory databases. At this point, some of the newer algorithms based on Block-Nested-Loops should be considered, such as SFS~\cite{sfs} and SaLSa~\cite{salsa}. The presorting and the threshold approaches showed that they can improve an algorithm such as ST-S, and thus can be recommended to be applied to BNL as well. 
+	\item In a scenario where progressiveness is important, an online-capable algorithm such as ST-S or SARTS should be chosen. Both algorithms perform excellently for medium-range to high $n$ and provide good scalability in parallelized environments. While tree-based algorithms do not scale well with high dimensionality, most online services seem to have a high number of database entries with mostly low dimensionality nowadays\footnote{Consider a database holding around 1 million hotels with 5-10 different categorical attributes each for this purpose.}.
+	\item In environments that require efficient memory usage SARTS is highly recommended to be chosen over ST-S due to its significantly lower space consumption. 
+\end{itemize}
+
+\section{Outlook}
+% parallelization
+While the parallelization approaches introduced in this work showed to improve the respective sequential versions of the algorithms, some of them have the potential to perform even better when running on more than 4 threads. This could be further tested, provided that a suiting machine is available. 
+
+% Art baum mit path compression und lazy expansion
+The current version of the SARTS algorithm already keeps up with ST-S in terms of computation time, and overtakes it by far in terms of efficient memory usage. Nevertheless, it still can be improved by utilizing not the basic, but the full version of the ART tree, including both lazy expansion and path compression. These techniques enable faster insert operations and dominance checks, and also save even more memory by leaving out unnecessary nodes. It is expected that with these improvements the SARTS algorithm would bypass ST-S both in speed and in efficiency of memory usage. The only (known) successor to ST-S to date is the algorithm TA-SKY, also proposed by the same authors in \cite{rahman}. Thus, it would be interesting to compare an improved version of SARTS to TA-SKY in terms of time and memory management. 
+
+% integration into a DBMS
+SARTS was originally developed in the context of an in-memory database, such as HyPer~\cite{hyper}. Still, it also seems suitable for I/O-intensive DBMS due to BNL being one of its ``ancestors''. While performance tests in this work showed that SARTS can deal quite well with synthetic datasets, it is always sensible to test an algorithm on real-world datasets. For this reason, it can be recommended to integrate SARTS in a database system, in order to see how well it fares in this environment. 
+
+% online algorithm
+As SARTS should be primarily used as an online algorithm, it also appears sensible to test it within a database system which demands its algorithms to work progressively, i.e. to deliver first results before the entire skyline is computed. Some sort of interactive web application seems fit for this purpose. 
