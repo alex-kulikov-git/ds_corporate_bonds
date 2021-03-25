@@ -1,8 +1,39 @@
 \chapter{Datastream Extraction Tool} \label{chapter:datastream-extraction-tool}
 In order to draw any conclusions regarding the relationship of bond and stock returns, the respective static and time series data needs to be acquired first. Since equity data is already available from the beginning of the IDP, the bond data is the only one which had to be acquired. For bond data extraction, the financial database product Datastream, provided by Thomson Reuters, can be used, since it is licensed for usage by TUM students and employees. 
 
-\section{Download Solution} \label{section:}
+\section{Download Solution} \label{section:download-solution}
 As Thomson Reuters has a wide range of products which can be used for different types of data, the first thing that needed to be done, was to determine the most suitable product to download both static and time series data for corporate bonds. After some time spent reading up and gathering information on the Thomson Reuters product portfolio, it became apparent that some of the products, such as the TR Python API, are only suitable for equity data download, and not for corporate bonds, and only have a very limited number of parameters available for download. On the other hand, it was found that other Thomson Reuters products, which would normally be suitable for automated download of bond data, such as e.g. DataScope Select (DSS) or Thomson Reuters Tick History (TRTH), are not included in the existing academic license. Other products -- noticeably the Datastream Web Service (DSWS) API, which is most suited for such requests -- are generally not available for academic clients. 
 
-These findings were a significant setback for the bond data extraction, since the only option left to acquire large amounts of corporate bond data, was over the Datastream Add-In for Microsoft Excel. While this add-in is rather convenient for small-scale manual requests with the help of so-called request tables, it is not optimized for large data extraction queries. 
+These findings were a significant setback for the bond data extraction, since the only option left to acquire large amounts of corporate bond data, was over the Datastream Add-In for Microsoft Excel. While this add-in is rather convenient for small-scale manual requests with the help of so-called request tables, it is not optimized for large data extraction queries. It does not provide an API for customizable requests. Instead, communication with the Datastream server is handled over a single API call available in VBA. This one and only callable function is implemented in C++, and can only be invoked in a black-box manner, since the provider does not give out its implementation. This leads to only one possible solution to automatically extract corporate bond data from Datastream. It can be described with the following steps: 
+\begin{enumerate}
+		\item Acquire Datastream codes / identifiers for all financial instruments which need to be downloaded.
+		\item Split these identifiers into batches small enough to be processed in a single Datastream request.
+		\item Fill a request table with as many requests as needed to include all the batches. 
+		\item Launch the Datastream requests for all the batches one after the other. 
+		\item Monitor the download process to ensure that the data is being consistently downloaded. 
+\end{enumerate}
+The programmatic development of the download tool will be based exactly on these five steps. The last step (monitoring the execution) is especially crucial and complex to implement. The reason for this is, as previously mentioned, that the Datastream Excel Add-In is not well-fit for large data downloads. Therefore, the following problems continuously arise during the download process: 
+\begin{itemize}
+	\item Datastream add-in eventually signs out for no obvious reason. 
+	\item Data download hangs, without any notification stating the reason or the hanging fact itself. 
+	\item Excel suspends the add-in and places it into a blacklist for repeated faulty behavior. 
+\end{itemize}
+Since VBA is single threaded and cannot detect or react to erroneous behavior when the download is running, it is impossible to do the monitoring in the VBA/Excel environment. For this purpose, a Python wrapper was developed as will be explained in .%TODO cite
+
+\section{Bond Identifiers Acquisition}
+Since for both static and time series requests Datastream requires unique financial instrument codes to be provided, it is first necessary to obtain a list of identifiers for the securities for which the data needs to be downloaded. The most commonly used unique security identifier in Datastream is the so-called Datastream Code (short \textit{dscd}). In the scope of the project two different approaches have been developed for this task, and will be introduced in the following. 
+
+\subsection{Programmatic Identifier Extraction}
+
+
+\subsection{Manual Identifier Extraction}
+
+
+
+
+
+
+
+
+
 
