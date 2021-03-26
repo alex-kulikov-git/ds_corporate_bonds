@@ -39,10 +39,6 @@
 	\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
 	\algtext*{EndSwitch}%
 	\algtext*{EndCase}%
-	% parallel_for
-	\algnewcommand\algorithmicpfor{\textbf{parallel\_for}}
-	\algdef{SE}[PFOR]{PFor}{EndPFor}[1]{\algorithmicpfor\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicpfor}%
-	\algtext*{EndPFor}%
 	
 
 	\frontmatter		
@@ -65,7 +61,7 @@
 
 		\input{chapters/Introduction}
 		\input{chapters/DatastreamExtractionTool}
-		\input{chapters/DataCleaningAndFormatting}
+		\input{chapters/DataPreparation}
 		\input{chapters/Matching}
 		\input{chapters/StatisticalAnalysis}
 		\input{chapters/Conclusion}
