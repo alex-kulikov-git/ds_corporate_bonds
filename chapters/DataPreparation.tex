@@ -32,10 +32,27 @@ the main procedure is as follows:
 
 Note that if the original Excel files were very large, i.e. with a high amount of securities or dates, Excel might reach its sheet length limit when running this macro. If you notice such behavior, there is another function shipped with this macro, called \textit{SplitInSubfiles()}. You can use this function on your initial downloaded Excel data to reshape it into smaller-sized files, before transforming it to 'long' format. 
 
-\section{Data Cleaning} \label{section:data-cleaning}
-As soon as the data has been formatted, it can be cleaned conveniently within statistical software. Since I am working with Stata, the Excel files with the reshaped time series data can be simply imported to Stata with the  \textit{import excel} Stata command. It is possible to save frequently used Stata scripts in form of \textit{.do} files to reuse them later. You can find all the do-files in the appendix attached to this project. The file do\_import\_excel can be found in . %TODO ref appendix
+\section{Stata Import} \label{section:data-cleaning}
+As soon as the data has been formatted, it can be cleaned conveniently within statistical software. Since I am working with Stata, the Excel files with static as well as reshaped time series data can be simply imported to Stata with the  \textit{import excel} Stata command. It is possible to save frequently used Stata scripts in form of \textit{.do} files to reuse them later. You can find all the do-files in the appendix attached to this project. The file do\_import\_excel can be found in . %TODO ref do_import_excel
 
+For the static bond data, it merely needs to be checked for duplicates, e.g. by using the ... Stata command. %TODO which command?
+Empirically, the static bond data extracted from Datastream is significantly cleaner than historical pricing data. 
+Therefore, all the following cleaning procedures only need to be applied to time series data.
 
+Because Stata can generally work with larger files than Excel, it makes sense to merge the imported time series files -- now already in Stata format -- to files of larger size. For this purpose, the do file ... can be used. %TODO ref do_append
+After the data has been imported to Stata, it can now be cleaned with the help of standard Stata procedures.  
 
+\section{Data Cleaning}
+For cleaning, multiple different procedures need to be applied. Since they are all commutative, it does not make a difference in which order these are executed. 
+\begin{itemize}
+	\item Null values can be cleaned with the \textit{drop} command, e.g. with \lstinline{drop if MPD=="NULL" | MPD==""} (). %TODO ref do_clean
+	Be prepared for a lot of values to be deleted when working with historical bond data. This is due to many bonds having been issued recently and thus not having older price entries. 
+	\item Erroneous values which sometimes occur in Datastream typically have high length. Remove these with e.g. \lstinline{drop if length(var) > 40}, with var being the variable names (). %TODO ref do_drop_error_values
+	\item Cast date stamps from string to date format. This can be done by generating a new variable for the date first (\lstinline{gen date = date(Date, "MDY")}). Then the new variable should be formatted to be well-readable (format date \%tdnn/dd/CCYY). After that the old variable \textit{Date} can be dropped, so that the newly created \textit{date} takes its place. 
+	\item Cast integer and double values that are coded as strings back to numeric, e.g. with the \lstinline{destring} command (). %TODO ref do_drop_error_values
+	\item Remove duplicates based on the variables \textit{date} and \textit{dscd}. There should not be two or more different entries for the same security on the same date. %TODO command for this?
+\end{itemize}
+Keep in mind to manually check the resulting data. No matter how thorough the cleaning procedure, there might still be some erroneous data which needs to be cleaned up or removed manually. Besides the listed cleaning methods, the data should additionally be searched for outliers that can have a negative impact on the further analysis. However, different values and tuples can be considered outliers depending on the analysis scenario. Therefore, I decided to leave the (not necessarily erroneous) outliers in the dataset at this step of the project. They will be filtered out as shown in chapter ... later on. %TODO ref chapter where clipping takes place
 
-
+After the data has been cleaned, many tuples will have been deleted. To make further analysis more convenient, it therefore makes sense to merge all the single data files into one. While depending on the size of the entire dataset, this should should be possible in most cases. Otherwise e.g. two or three files can be produced in total. Files can be merged easily in Stata, e.g. by using the \lstinline{append} command (). %TODO ref do_append_cleaned
+The resulting cleaned and compact data is now ready for future statistical analysis. 
