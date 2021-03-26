@@ -20,7 +20,7 @@ The programmatic development of the download tool will be based exactly on these
 \end{itemize}
 Since VBA is single threaded and cannot detect or react to erroneous behavior when the download is running, it is impossible to do the monitoring in the VBA/Excel environment. For this purpose, a Python wrapper was developed as will be explained in .%TODO cite
 
-\section{Bond Identifiers Acquisition}
+\section{Bond Identifiers Acquisition} \label{section:bond-identifiers-acquisition}
 Since for both static and time series requests Datastream requires unique financial instrument codes to be provided, it is first necessary to obtain a list of identifiers for the securities for which the data needs to be downloaded. The most commonly used unique security identifier in Datastream is the so-called Datastream Code (short \textit{dscd}). In the scope of the project two different approaches have been developed for this task, and will be introduced in the following. 
 
 \subsection{Programmatic Identifier Extraction}
@@ -38,7 +38,7 @@ While the described approach solves the problem of selecting all the needed corp
 To extract the needed corporate bond identifiers manually, we can make use of the fact that Datastream allows to select all filtered securities at once when there are less than 4,000. Because of this, we can simply split our entire data into multiple chunks that are all smaller than 4,000 bonds in total. This can be done by selecting one or more parameters (the number depends on the size of the dataset) according to which the bonds can be filtered even further. For example, an entire bond dataset with 60,000 bonds in total can be split by coupon size first, and then additionally by currency to produce bond batches of maximum 4,000 bonds each. For a visualization of this approach, see Fig. %TODO create figure
 If the split has been done properly, it will include all of the desired securities, since each bond belongs to one particular coupon size as well as currency group. In most cases, there will be only few groups that need to be extracted from the interface. In the case of 60,000 bonds, one would only have $60,000 / 4,000 = 15$ groups in total. In reality, for this concrete use case, 19 different bond groups had to be created. This is because not all splits are perfect, and some of them just consist of 3,500 bonds instead of 4,000 for example. After the splitting work has been done, the resulting bond groups can be extracted manually with just a few clicks. 
 
-\section{Automating the Request Table}
+\section{Automating the Request Table} \label{section:automating-request-table}
 After the bond identifiers in form of \textit{dscd} codes have been extracted, they can be used to retrieve both static and time series data from Datastream. For this purpose, I wrote a VBA program which fully automates the download process. The only input needed from the user is the \textit{dscd }identifiers, the desired variable codes (such as price, issued volume, etc.) as well as the desired time frames in the case of a time series request. Since the program code is rather complex, I will only cover the main approach briefly. A more in-depth description can be found in the appendix to this work. %TODO create appendix
 
 At the beginning, the VBA tool retrieves the user-provided identifiers and datatypes from the respective Excel files. Then, based on the input size, multiple calculations take place. For static information requests not much needs to be done, since these are usually relatively small and only depend on the number of securities for which the data is requested. For time series requests though, the tool estimates how large the entire request will get, depending on dates window, frequency of time points (e.g. daily or quarterly), the number of datatypes, and the number of identifiers. If the request is too large to be processed by Datastream in one run, it gets split into multiple smaller requests of equal size. Since there is no particular metric to estimate in advance whether a particular request will be executed by Datastream, or whether it is too large for that, the tool only computes an approximation based on an empirically measured \textit{Bytes per Field} metric. The single requests then get entered into the request table one below the other, and each receive an own Excel file as destination to store the data. 
@@ -47,10 +47,19 @@ As soon as the request table has been filled (which does not take long), the com
 
 While the entire Datastream Extraction Tool is much more complex than what has been described here, the given explanation covers the most crucial parts of the download process. At this point, note that the error monitoring step, which was previously mentioned as essential, cannot be completed in VBA due to its single-threaded execution engine. The next section will cover the required workaround for this functionality. 
 
-\section{Error Monitor}
+\section{Error Monitor} \label{section:error-monitor}
+In order to provide an error monitoring capacity as well as a graphical user interface (see section \ref{section:user-interface}) for the created VBA tool, a Python 3 wrapper program has been created. For the architecture of the Python-side controller see Fig. \ref{fig:ds-extraction-tool-architecture}. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.1\linewidth]{figures/ds-extraction-tool-architecture}
+	\caption{Architecture of the Datastream Extraction Tool}
+	\label{fig:ds-extraction-tool-architecture}
+\end{figure}
 
 
-\section{User Interface}
+
+\section{User Interface} \label{section:user-interface}
 
 
 
