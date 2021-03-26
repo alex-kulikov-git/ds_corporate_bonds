@@ -48,7 +48,7 @@ As soon as the request table has been filled (which does not take long), the com
 While the entire Datastream Extraction Tool is much more complex than what has been described here, the given explanation covers the most crucial parts of the download process. At this point, note that the error monitoring step, which was previously mentioned as essential, cannot be completed in VBA due to its single-threaded execution engine. Section \ref{section:error-monitor} will cover the required workaround for this functionality. 
 
 \section{User Interface} \label{section:user-interface}
-In order to provide a graphical user interface as well as an error monitoring capacity (section \ref{section:error-monitor}) for the created VBA tool, a Python 3 wrapper program has been created. It's architecture can be seen in Fig. \ref{fig:ds-extraction-tool-architecture}. 
+In order to provide a graphical user interface as well as an error monitoring capacity (section \ref{section:error-monitor}) for the created VBA tool, a Python 3 wrapper program has been created. It's architecture can be seen in Fig. \ref{fig:ds-extraction-tool-architecture}. At this point, note that a detailed usage manual for the Datastream Extraction Tool -- including its user interface -- can be found in the appendix to this work. %TODO ref
 
 \begin{figure}[h]
 	\centering
@@ -59,13 +59,25 @@ In order to provide a graphical user interface as well as an error monitoring ca
 
 As shown in the visualization, the Python program has a \textit{GUI} component, which runs on its main thread (Thread 1). The layout of the user interface is depicted in Fig. \ref{fig:gui}. 
 
-%TODO Update screenshot here and in Manual
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1.1\linewidth]{figures/gui.png}
 	\caption{Graphical User Interface of the Datastream Extraction Tool}
 	\label{fig:gui}
 \end{figure}
+
+Its features include: 
+\begin{itemize}
+	\item Request type selection (static or time series)
+	\item Time frames and frequency for time series requests
+	\item Request datatypes, which can be entered either in a manual list or via an Excel file
+	\item Data identifiers, which can also be entered either manually or via Excel file
+	\item Request format with one or more Datastream request options (e.g. header row, currency, etc.)
+	\item Destination choice for downloaded data
+	\item Saving and reusing frequently entered requests
+\end{itemize}
+
+The user interface has been programmed using the \textit{Tkinter}\footnote{\url{https://docs.python.org/3/library/tkinter.html}} package, which enables rudimentary container-based gui creation. 
 
 
 
