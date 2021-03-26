@@ -45,10 +45,10 @@ At the beginning, the VBA tool retrieves the user-provided identifiers and datat
 
 As soon as the request table has been filled (which does not take long), the command to process the first request is issued to Datastream. This happens via a call to the single available function, which tells Datastream to process the current request table in a black-box manner. After the request ends, the tool checks whether the requested data has arrived to the destination file. If not, it checks the connection of the Datastream add-in and issues a warning to the user if the add-in unexpectedly disconnected. In both cases, the result of the request is logged, in order for the user to be able to read up on the proceedings later. To prevent the computer from sleeping or going in idle mode, the tool moves the computer mouse pointer after each request with a dedicated VBA function. When the first request of the request table has been processed, the other ones get executed in the same manner one after the other. Note that while it is possible to submit the execution for all requests at once, it is not advisable, since Datastream might issue an error due to the data being too large, or might otherwise simply hang during execution. This is exactly the reason why we had to split up the original request in multiple parts in the first place. 
 
-While the entire Datastream Extraction Tool is much more complex than what has been described here, the given explanation covers the most crucial parts of the download process. At this point, note that the error monitoring step, which was previously mentioned as essential, cannot be completed in VBA due to its single-threaded execution engine. The next section will cover the required workaround for this functionality. 
+While the entire Datastream Extraction Tool is much more complex than what has been described here, the given explanation covers the most crucial parts of the download process. At this point, note that the error monitoring step, which was previously mentioned as essential, cannot be completed in VBA due to its single-threaded execution engine. Section \ref{section:error-monitor} will cover the required workaround for this functionality. 
 
-\section{Error Monitor} \label{section:error-monitor}
-In order to provide an error monitoring capacity as well as a graphical user interface (see section \ref{section:user-interface}) for the created VBA tool, a Python 3 wrapper program has been created. For the architecture of the Python-side controller see Fig. \ref{fig:ds-extraction-tool-architecture}. 
+\section{User Interface} \label{section:user-interface}
+In order to provide a graphical user interface as well as an error monitoring capacity (section \ref{section:error-monitor}) for the created VBA tool, a Python 3 wrapper program has been created. It's architecture can be seen in Fig. \ref{fig:ds-extraction-tool-architecture}. 
 
 \begin{figure}[h]
 	\centering
@@ -57,9 +57,18 @@ In order to provide an error monitoring capacity as well as a graphical user int
 	\label{fig:ds-extraction-tool-architecture}
 \end{figure}
 
+As shown in the visualization, the Python program has a \textit{GUI} component, which runs on its main thread (Thread 1). The layout of the user interface is depicted in Fig. \ref{fig:gui}. 
+
+%TODO Update screenshot here and in Manual
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.1\linewidth]{figures/gui.png}
+	\caption{Graphical User Interface of the Datastream Extraction Tool}
+	\label{fig:gui}
+\end{figure}
 
 
-\section{User Interface} \label{section:user-interface}
 
-
+\section{Error Monitor} \label{section:error-monitor}
+As shown in the visualization, the error monitoring module runs in a separate thread (Thread 2), since Python allows execution on multiple threads simultaneously. It is started from the main thread, which controls the graphical user interface, whenever a new download request has been issued to Datastream. 
 
