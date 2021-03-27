@@ -1,1 +1,43 @@
 \chapter{Matching} \label{chapter:matching}
+In order to analyze the lead-lag relationship of corporate bonds and stocks, we need a large, survivorship bias free database with both stock and bond returns for any given point in time. So far, we only have two separate databases -- one with historical corporate bonds data, and one with historical equity data. Therefore, the two databases have to be joined into one, based on the company that issued both. The task is not as trivial as it might seem, since there is no unique company identifier available in both databases. In the following, the available matching options will be discussed, and the most suitable approach chosen. 
+
+\section{Available Options}
+To begin with, the following extracted bond and equity parameters were considered for the matching: 
+\begin{itemize}
+	\item SEDOL code
+	\item WKN code
+	\item CUSIP-9 code
+	\item ISIN code
+	\item Worldscope identifier
+	\item Company name
+\end{itemize}
+
+\subsection{SEDOL} %TODO ref https://www.investopedia.com/terms/s/sedol.asp
+The SEDOL is a unique 7-character identification code which stands for 'Stock Exchange Daily Official List'. It is issued for securities registered in the United Kingdom and Ireland by the London Stock Exchange. Despite being used to uniquely identify securities, it does not, in general, contain a unique issuing company identifier, because the codes are simply issued sequentially. For example, two bonds, which were both issued by Apple Inc., can have the SEDOL codes \textit{BF43J24} and \textit{BK9WPP6}, respectively. The only similarity between the two is that these were issued only two years apart, and thus have the \textit{B} at the beginning in common. Besides, the identifier is not available in our stocks database, and only exists for securities of companies listed on the LSE. 
+
+\subsection{WKN} %TODO ref downloaded pdf
+The WKN is a German 6-digit alphanumeric security identification code and stands for 'Wertpapierkennnummer'. Since 2004, it is possible for companies to obtain a WKN with a unique company identifier included. A WKN includes a company identifier if it starts with at least two characters before proceeding with digits. However, not all companies make use of this opportunity when ordering a WKN for their securities. Taking into account that there are also multiple exceptions from the rule base of WKN identifiers, it is hard to use these as unique company identifiers. This is especially the case because WKN are generally only available for German securities. Also, the parameter is not available in our existing equities database. 
+
+\subsection{CUSIP-9} %TODO ref https://www.investopedia.com/terms/c/cusipnumber.asp
+The CUSIP number is a unique identification number assigned to all equities and bonds that are registered in the United States and Canada. The CUSIP consists of 9 alphanumeric characters, of which the first 6 comprise the unique issuing company identifier. The code is often used in one of its shorter forms, i.e. as CUSIP-8 and CUSIP-6. However, in our case, only the CUSIP-6 variant is of interest. It can be derived from CUSIP-9 by simply dropping the last three characters. The CUSIP-9 code is directly available in our equities database. In the bonds database, it can only be found directly for some of the securities in the so-called \textit{local code} variable (LOC), which can be found in Datastream. Unfortunately, the CUSIP values entered in this variable are not very reliable. A workaround can be achieved by using the security ISIN, as will be explained in \ref{section:cusip-matching}. 
+
+\subsection{ISIN} %TODO ref internet
+The ISIN stands for 'International Securities Identification Number' and is an international standard way to uniquely identify securities. The ISIN by itself is not a unique company identifier. However, it sometimes contains a company identifier as part of it. In particular, for U.S. and Canadian securities, the ISIN usually contains the Cusip-9 code, which, in its turn, contains a 6-digit unique company identifier. For U.K. and Irish securities, the ISIN usually contains the SEDOL code. And for German securities, the ISIN contains the WKN. Therefore, while the ISIN itself cannot be directly used for the matching, it can nevertheless be used to obtain missing matching code values by extracting them from the ISIN. 
+
+\subsection{Worldscope identifier} %TODO cite Datastream database explanation, mb include in appendix
+The Worldscope Identifier is a 9-digit code issued by Worldscope, a Thomson Reuters' fundamentals product. It is used to uniquely identify both issuing companies and securities. For U.S. companies, the Worldscope Identifier is identical with the CUSIP-9 code. For non-U.S. companies, a derived identifier is used, based on the country where the issuing company is domiciled, and also includes a unique company code. A more detailed explanation of the mechanics can be found in the Datastream database or the appendix to this work. %TODO ref appendix screenshots
+Unfortunately, the Worldscope Identifier is only available in the equities database, and not for bonds. Therefore, it cannot be used for the matching. 
+
+\subsection{Company name}
+As the 'method of last resort', the company name itself can be used to join the bond and equity databases. The problem with company names as identifiers is though that these are not necessarily unique on the one hand, and also tend to have heterogeneous spelling -- i.e. one and the same company can be spelled in multiple different ways across the database. To provide an example, the company names \textit{THE WILLIAMS COMPANIES INCO} and \textit{WILLIAMS PARTNERS L.P.} refer to the same company, but are written differently, which makes the join between the two databases ambiguous. Nevertheless, the approach can be a good starting point when other options are not available, and will be introduced in more detail in the next section. 
+
+\section{Fuzzy String Matching} \label{section:fuzzy-string-matching}
+
+
+\section{Cusip-6 Matching} \label{section:cusip-matching}
+
+
+\section{Evaluation} \label{section:matching-evaluation}
+
+
+
