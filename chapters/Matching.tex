@@ -29,13 +29,36 @@ The Worldscope Identifier is a 9-digit code issued by Worldscope, a Thomson Reut
 Unfortunately, the Worldscope Identifier is only available in the equities database, and not for bonds. Therefore, it cannot be used for the matching. 
 
 \subsection{Company name}
-As the 'method of last resort', the company name itself can be used to join the bond and equity databases. The problem with company names as identifiers is though that these are not necessarily unique on the one hand, and also tend to have heterogeneous spelling -- i.e. one and the same company can be spelled in multiple different ways across the database. To provide an example, the company names \textit{THE WILLIAMS COMPANIES INCO} and \textit{WILLIAMS PARTNERS L.P.} refer to the same company, but are written differently, which makes the join between the two databases ambiguous. Nevertheless, the approach can be a good starting point when other options are not available, and will be introduced in more detail in the next section. 
+As the 'method of last resort', the company name itself can be used to join the bond and equity databases. The problem with company names as identifiers is though that these are not necessarily unique on the one hand, and also tend to have heterogeneous spelling -- i.e. one and the same company can be spelled in multiple different ways across the database. To provide an example, the company names \textit{THE WILLIAMS COMPANIES INCO} and \textit{WILLIAMS PARTNERS L.P.} refer to the same company, but are written differently, which makes the join between the two databases ambiguous. Nevertheless, the approach can be a good starting point when other options are not available, and will be introduced in greater detail in the next section. 
 
 \section{Fuzzy String Matching} \label{section:fuzzy-string-matching}
+Having considered the different options to perform the matching, it becomes apparent that the only unique identifier which can be reliably used for the task is the CUSIP-9 code. Additionally, the company name can be used to produce a solid baseline to start with. In this section, a matching approach called Fuzzy String Matching will be introduced as a means to join the datasets via company name. In the next section, a matching approach based on the CUSIP code will be explained. 
+
+The term Fuzzy String Matching -- also called Approximate String Matching -- refers to use cases when there are two or more strings which have the same meaning, but are spelled somewhat differently. There exist multiple approaches to measure the extent of 'difference' between strings. The formula which is most commonly used is the so-called Levenshtein distance. It measures the minimum number of single-character edits required to change one given sequence into the other. An \textit{edit}, in its turn, is defined as one of the three operations performed on a string: 
+\begin{itemize}
+	\item insertion
+	\item deletion
+	\item substitution
+\end{itemize}
+Depending on the implementation, a substitution of a character can count as either one or two edits. This is because a substitution technically consists of both an insertion and a deletion. For simplicity reasons it can be assumed to count as one edit just like the other two operations. To give an example, consider a company that is called \textit{Apple Inc.} in one dataset and \textit{Apple Incorp.} in the other. The Levenshtein distance between the two company names would be 3, because exactly 3 insertions need to be performed in order to produce \textit{Apple Incorp.} from \textit{Apple Inc.} These insertions are the 3 characters \textit{o}, \textit{r} and \textit{p}. Alternatively, we can also start the other way around, from the company name \textit{Apple Incorp.} In this case, we would need 3 deletions to produce \textit{Apple Inc.} In particular, we would have to delete the 3 characters \textit{o}, \textit{r} and \textit{p}. 
+
+While there exists a concrete formula which defines the Levenshtein distance, it is not very relevant in this context, since we will not be implementing the Levenshtein distance ourselves. 
+%TODO cite both levenshtein distance and its formula
+Instead, we will make use of dedicated Python packages, which compute the Levenshtein distance between two strings behind the scenes in order to produce a similarity score. In this work, we consider the two packages \textit{fuzzywuzzy}\footnote{https://pypi.org/project/fuzzywuzzy} and \textit{rapidfuzz}\footnote{https://pypi.org/project/rapidfuzz} for the task. In reality, these packages do slightly more than just computing the edit distance, depending on the particular function called. A detailed description of these packages' capabilities can be found in their respective documentation. 
+
+The concept will be used in our case to select for each company name from the bonds database the one from the equities database which has the smallest Levenshtein distance to it. This way, matching company names from the two datasets will be connected to each other to produce a join. 
+
+\subsection{Fuzzy-Wuzzy}
+\textit{Fuzzywuzzy} is the most commonly used package for fuzzy string matching in the Python community. Therefore, my first approach to perform the matching was with the fuzzywuzzy package. It requires additionally the package \textit{python-Levenshtein} to be installed, so it can use its faster C implementation of the Levenshtein distance. The rest of the \textit{fuzzywuzzy} package is programmed in Python. 
+
+To start with the implementation, the static bond and equity data needs to be read into \textit{pandas}\footnote{https://pandas.pydata.org} dataframes to perform further operations on it. For this purpose, it is advisable to export the static data from Stata to the CSV\footnote{CSV means comma-separated-values and is a frequently used data storage format. In the first row of a CSV file there are usually column headers, all separated by commas. In all further rows the single column values are stored, also separated by commas. The format is frequently used in data science applications due it being lightweight and information-dense. } format, and then to import it in Python from CSV files. I explicitly discourage exporting data from Excel to CSV, because Excel has its own understanding of the CSV format, which might not be compatible with \textit{pandas}. 
+
+After the data has been loaded into dataframes, one for bond company names, and one for stock company names, it can be fed into one of the predefined \textit{fuzzywuzzy} functions. To start simple, two company names can be compared to each other with the built-in function ratio(), which computes the standard Levenshtein distance similarity ratio between the two sequences. Note that this function also takes into account whether the characters are capitalized or not. Thus, \textit{Apple Inc. }and \textit{apple Inc.} would produce a similarity ratio lower than 100\% due to the difference in the capitalization of the first letter. This is a not very desired behavior for our use case, because we do not care much whether a company's name is written in upper or lower case letters. 
+
+\subsection{Rapidfuzz}
 
 
-\section{Cusip-6 Matching} \label{section:cusip-matching}
-
+\section{CUSIP Matching} \label{section:cusip-matching}
 
 \section{Evaluation} \label{section:matching-evaluation}
 
