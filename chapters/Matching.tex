@@ -73,6 +73,21 @@ As there is no complex data science involved here, the procedure can be done dir
 Herewith, the matching over the CUSIP-9 identifier is accomplished and the results can be saved. 
 
 \section{Evaluation} \label{section:matching-evaluation}
-The number of created matching pairs will be 6,466. On the one hand, it is to be expected, since only U.S. and Canadian
+The results of the two matching approaches are as following: 
+\begin{itemize}
+	\item With Fuzzy String Matching, around 26,032 bonds have found an equity matching partner. This equals appx. 42.89\% of the total 60,688 bonds. 
+	\item With the CUSIP-9 approach, 6,460 (North American) bonds have found an equity match. This equals appx. 10.64\% of the total 60,688 bonds. 
+\end{itemize}
+While the Fuzzy String Matching approach has a significantly higher matching ratio, one should keep in mind that the CUSIP-9 results are more reliable, because it is a unique key attribute and not a fuzzy one. For further analysis, it makes sense to merge the two matching tables to come up with one single matching database of highest possible accuracy. For this, we can use the \textit{append} command from Stata to simply concatenate the two datasets. Remember to make sure that both datasets have the same variables and same variable names in order for the union to work. For example, one might need to create an empty similarity\_score variable in the CUSIP matching first, because it is present in the fuzzy string matching. %TODO do file for this?
+As soon as the matching tables have been concatenated, the resulting dataset will contain duplicates in respect to bond\_dscd and stock\_dscd parameters. You can check this by running the command \lstinline|duplicates report bond_dscd stock_dscd|. This is due to the two matchings having overlaps. While the duplicates should be removed, it is important to keep the CUSIP matching pair and not the fuzzy matching one for each encountered duplicate. This is because for the CUSIP matching we can be 100\% sure that it is accurate. The information that a bond and an equity are perfect matches, and not just based on a similarity score of e.g. 92\%, might be useful in later analyses. 
+After the duplicates have been removed, %TODO HOW?!
+the total matching ratio increases from 42.89\% (26,032 bonds with fuzzy matching only) to 44.91\% (28,254 bonds with both approaches combined). While the improvement is only minor, keep in mind that some of the matching pairs are now more reliable than with fuzzy string matching alone. It is hard to give an concise measure of how many matches are perfect matches without manually checking all of them. But since the similarity score was already over 90\% for the fuzzy string matching, my estimation is that around 40\% of the pairs are perfect matches. 
+
+\section{Outlook} \label{section:matching-outlook}
+
+
+
+
+
 
 
