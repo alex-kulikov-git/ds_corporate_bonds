@@ -1,14 +1,6 @@
-\chapter{Conclusion}
-\label{chapter:Conclusion}
+\chapter{Conclusion} \label{chapter:Conclusion}
 
 \section{Summary}
-In this work, three of the basic skyline algorithms Naive-Nested-Loops, Block-Nested-Loops and Divide-and-Conquer, as well as the newer ST-S algorithm were introduced. The algorithms were placed into the ``big picture'' of the current state-of-the-art skyline algorithms and explained in detail. Thereafter, the novel skyline algorithm SARTS, which utilizes the highly efficient ART tree, was presented. The algorithm keeps all the advantages of ST-S, while being significantly more memory-efficient at the same time. The algorithms were parallelized using different approaches and frameworks, which were explained in greater detail. In the last chapter, an evaluation of the conducted tests was carried out and the outcomes analyzed. 
 
-With the results of this work, the following points should be considered when choosing the right skyline algorithm for the particular use case: 
-\begin{itemize}
-	\item When the application scenario assumes continuous attribute values and does not require progressive behavior, then Block-Nested-Loops seems to be a very potent ``all-rounder'' algorithm, well suited for both I/O-intensive as well as in-memory databases. At this point, some of the newer algorithms based on Block-Nested-Loops should be considered, such as SFS~\cite{sfs} and SaLSa~\cite{salsa}. The presorting and the threshold approaches showed that they can improve an algorithm such as ST-S, and thus can be recommended to be applied to BNL as well. 
-	\item In a scenario where progressiveness is important, an online-capable algorithm such as ST-S or SARTS should be chosen. Both algorithms perform excellently for medium-range to high $n$ and provide good scalability in parallelized environments. While tree-based algorithms do not scale well with high dimensionality, most online services seem to have a high number of database entries with mostly low dimensionality nowadays\footnote{Consider a database holding around 1 million hotels with 5-10 different categorical attributes each for this purpose.}.
-	\item In environments that require efficient memory usage SARTS is highly recommended to be chosen over ST-S due to its significantly lower space consumption. 
-\end{itemize}
 
 \section{Outlook}
