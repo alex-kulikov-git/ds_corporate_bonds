@@ -1,62 +1,63 @@
-\chapter{Performance Measurements} \label{appendix-performance}
+\chapter{Datastream Extraction Tool Manual} \label{appendix-dset-manual}
 \captionsetup{margin=10pt,font=large,labelfont=bf,textfont={bf}}
 
-%\begin{figure}[h]
-%	\centering
-%	\captionof{table}{{\large \textbf{Non-Progressive Algorithms by Number of Tuples}}}
-%	\includegraphics[width=0.9\linewidth]{figures/table-non-progressive-n}
-%	\label{fig:table-non-progressive-n}
-%\end{figure}
-%
-%\begin{figure}[H]
-%	\centering
-%	\captionof{table}{Non-Progressive Algorithms by Dimensionality}
-%	\includegraphics[width=0.9\linewidth]{figures/table-non-progressive-dim}
-%	\label{fig:table-non-progressive-dim}
-%\end{figure}
-%
-%\begin{figure}[h]
-%	\centering
-%	\captionof{table}{Non-Progressive Algorithms by Number of Threads}
-%	\includegraphics[width=0.9\linewidth]{figures/table-non-progressive-threads}
-%	\label{fig:table-non-progressive-threads}
-%\end{figure}
-%
-%\begin{figure}[H]
-%	\centering
-%	\captionof{table}{Progressive Algorithms by Number of Tuples}
-%	\includegraphics[width=1\linewidth]{figures/table-progressive-n}
-%	\label{fig:table-progressive-n}
-%\end{figure}
-%
-%\begin{figure}[h]
-%	\centering
-%	\captionof{table}{Progressive Algorithms by Dimensionality}
-%	\includegraphics[width=1\linewidth]{figures/table-progressive-dim}
-%	\label{fig:table-progressive-dim}
-%\end{figure}
-%
-%\begin{figure}[h]
-%	\centering
-%	\captionof{table}{Progressive Algorithms by Number of Threads}
-%	\includegraphics[width=1\linewidth]{figures/table-progressive-threads}
-%	\label{fig:table-progressive-threads}
-%\end{figure}
-%
-%\begin{figure}[H]
-%	\centering
-%	\captionof{table}{Memory Usage by Number of Tuples}
-%	\includegraphics[width=0.53\linewidth]{figures/table-memory-usage-n}
-%	\label{fig:table-memory-usage-n}
-%\end{figure}
-%
-%\begin{figure}[H]
-%	\centering
-%	\captionof{table}{Memory Usage by Dimensionality}
-%	\includegraphics[width=0.55\linewidth]{figures/table-memory-usage-dim}
-%	\label{fig:table-memory-usage-dim}
-%\end{figure}
+The full version of the Datastream Extraction Tool Manual can be found in the project folder of the Google Drive repository under \url{https://bit.ly/3rB3lqg}. 
 
+\section{Introduction}
+The Datastream Extraction Tool is an application that allows the user to download financial data from Thomson Reuters Datastream without the overhead of doing it manually in Excel. The tool was created specifically for large static and time-series requests, and supports long-duration downloads of data. 
+
+\section{Installation}
+Please, be aware of the following: 
+\begin{itemize}
+	\item The application can only be run on Windows computers. It cannot be ported to MacOS or Linux, as the Thomson Reuters Excel add-in is only available for Windows, and also because the VBA (Visual Basic for Applications) version on Unix-based computers is a different one than on Windows computers. 
+	\item While the application can generally be run on remote computers as well, it can be rather inconvenient. On the one hand, remote computers tend to be less stable in terms of internet connection and add-in connectivity. And additionally, the remote computers of TUM-SOM have rather poor performance (especially disk access!), which would constrain the data download. Furthermore, remote computers automatically shut down after some time, which makes downloading large data loads problematic. For smaller requests though, that take up to 1 hour of download time, the remote execution should suffice. 
+\end{itemize}
+
+\subsection{Prerequisites}
+Please make sure that the following environment is established before you proceed with the installation.
+\begin{itemize}
+	\item Make sure you have a valid \textbf{Microsoft Office Installation}. The application was tested with Office 365, but it should also run with other recent Office environments.
+	\item Make sure that \textbf{Thomson Reuters Eikon \& Datastream} is installed. If you install it for the first time, please ensure that the Datastream add-on in the Excel plug-in is enabled. 
+	\item Make sure that you have an up-to-date version of \textbf{Python 3} installed. Python 3 is different from Python 2; with Python 2 the application will not work. 
+	\item Make sure that in Windows Power Options you select that your PC "never" goes to sleep. Since otherwise this can interrupt long-running downloads. 
+\end{itemize}
+
+\subsection{Download}
+Follow these steps to install the application on your computer: 
+\begin{enumerate}
+	\item Download the \textit{Shippable} folder from \url{https://bit.ly/2VfT058} to your computer. Choose a location with enough free space, as the downloaded data will be stored in-place. 
+	\item Unzip the downloaded file. You can rename the root folder from \textit{Shippable} to a different name at your convenience. Please, do \textbf{not} rename any of the folders or files inside. Such changes would need to be propagated to the program code. 
+	\item In the \textit{Shippable }folder, you will find a file called \textbf{\textit{prerequisites.py}}. You need to run this file with Python. You can do so by e.g. right-clicking on the file, selecting "Open with" and then choosing Python. It will then automatically install external Python packages needed for the app. 
+\end{enumerate}
+
+\subsection{Settings}
+Finally, you will need to adjust some settings in Excel the first time you install the application. For this purpose, open the file called \textit{RequestTable.xlsm} in the \textit{Shippabl}e folder. 
+
+The first time you open it, you might get prompted to activate file contents or to allow modifications, etc. Please agree to all such messages. 
+
+Further, take care of the following settings: 
+\begin{itemize}
+	\item Make sure that both the \textit{Thomson Reuters} tab and the \textit{Thomson Reuters Datastream} tab show in the tab panel of the Excel document. 
+	\item In the Thomson Reuters tab go to Settings $=>$ Sign-In $=>$ choose to automatically sign-in whenever Office is started. 
+	\item Go to File $ => $ Options $ => $ Trust Center $ => $ Trust Center Settings and do: 
+	\begin{itemize}
+		\item Macro Settings $ => $ select "\textit{Enable all macros}" and check "\textit{Trust access to the VBA project object model}". 
+		\item Protected View $ => $ uncheck all boxes except for "\textit{Outlook attachments}". 
+		\item Add-ins $ => $ uncheck all boxes.
+		\item External Content $ => $ select "\textit{Enable all Data Connections}", "\textit{Enable automatic update for all Workbook Links}", "\textit{Enable all Linked Data Types}".
+	\end{itemize}
+	\item Go to File $ => $ Options $ =>  $Customize Ribbon $ => $ select \textit{Main Tabs} on the right $ => $ check the \textit{Developer, Add-ins, Thomson Reuters}, and \textit{Thomson Reuters Datastream} tabs. 
+	\item Go to File $ => $ Options $ => $ Advanced $ => $ section \textit{General} $ => $ uncheck option \textit{Ask to update automatic links}. 
+	\item Go to File $ => $ Options $ => $ Add-ins and make sure that the add-in \textit{Thomson Reuters Eikon - Microsoft Office }is listed among \textit{Active Application Add-ins}. It should be. If not, refer to the Troubleshooting section. 
+	\item Press "Alt + F11" (the VBA editor will appear) $ => $ go to Tools $ => $ References $ => $ check the box near "\textit{Microsoft Scripting Runtime}"
+\end{itemize}
+
+Now, you should be well set to run the application.
+
+\section{Usage}
+You can start the Datastream Extraction Tool by running the file \textbf{\textit{ds\_extraction\_tool.py}} with Python. 
+
+If you encounter a problem, some other prerequisites on your computer might be missing that might not have been covered in this guide. In that case, please contact the project developer. 
 
 
 \input{chapters/AppendixCode}
