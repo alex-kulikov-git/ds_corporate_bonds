@@ -86,7 +86,7 @@ Within the \textbf{Request Datatypes} section, you can enter the codes of the pa
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=1.1\linewidth]{figures/enter-datatypes.png}
+	\includegraphics[width=0.4\linewidth,height=0.35\linewidth]{figures/enter-datatypes.png}
 	\caption{A sample file with datatypes}
 	\label{fig:file-datatypes}
 \end{figure}
@@ -180,18 +180,60 @@ One of the following hanging problems applies:
 Open Task Manager. Kill the Excel task first, then the extraction tool. The extraction tool will be shown as "Python" in the task list. Then restart the extraction tool and resume the download. 
 
 \section{Technical Aspects}
-In this section, a technical description of the application architecture will be provided. 
+In this section, a technical description of the application architecture will be provided. For an illustration of the entire architecture, see Fig. \ref{fig:ds-extraction-tool-arch}. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.1\linewidth]{figures/ds-extraction-tool-architecture}
+	\caption{Datastream Extraction Tool Architecture}
+	\label{fig:ds-extraction-tool-arch}
+\end{figure}
 
 \subsection{Excel / VBA Part}
+The Visual Basic for Applications part of the data extraction tool consists of four modules, each serving its own purpose: 
+\begin{itemize}
+	\item modDeclares
+	\item modVariables
+	\item modUtils
+	\item modTS
+\end{itemize}
+Within \textit{modDeclares}, operating system level constants and functions are defined. The declaration of such functions with \textit{Declare} and of constants with \textit{Const} equals an import of this functionality to the project. If you are not familiar with the reasoning behind the usage of \textit{PtrSafe} and \textit{LongPtr} keywords, you can read it up here: .  \\ %TODO
+%https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/ptrsafe-keyword
+%https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/longptr-data-type
 
+The module \textit{modVariables} simply contains all the global variables used within the project, split by their usage area as described in the annotations. \\
 
+In \textit{modUtils}, a large amount of helper functions are defined. About half of them are self-written, the others come from solutions available online. While I cannot guarantee for all of them to always work correctly, it is unlikely for them to contain bugs, since I extensively tested most of them in different contexts. 
+The most important functions are the ones I wrote to wrap the communication with the \textit{settings.txt} file (InitDict, GetFromDict, UpdateDict, PutKV, and GetKV), and those responsible for the Datastream Add-In connection (Connect\_COM\_AddIn, InstallCOMAddIn, iAddInStatus, CheckPluginConnection). Make sure to familiarize yourself with them if you are going to make changes or extensions to the tool. \\
+
+The module \textit{modTS} is the main module of the tool, in which most of the action happens. It is well-modularized by itself and contains the following functions: 
+\begin{itemize}
+	\item getTSData
+	\item start
+	\item init
+	\item setDefaultSettings
+	\item getIDs
+	\item getDatatypes
+	\item doCalculations
+	\item fillTableIDs
+	\item fillTableFields
+	\item request
+\end{itemize}
+The order of execution when the tool is started directly corresponds with the position of the functions in the code (like above). \textit{getTSData} is the only function declared as \textit{public} in the module, and is the entry point to the program. This function gets called from the Python part of the tool whenever a request has been started by the user. It calls the function \textit{start}, which sets default constants, checks the Datastream add-in connection, unpacks user-provided settings from the \textit{settings.txt} file, and calls the \textit{init} function if this is the first time this request is executed. The \textit{first\_time} is set in the \textit{settings.txt} file originally, and is received from there via the key-value dictionary wrapper. If this is the first time one and the same request is being started, the function \textit{init} initializes global variables with values from the settings dictionary. Additionally, the function initializes a number of other functions which fill the request table with contents needed to execute the user request. \\
+
+At first, the current request table sheet is cleared from previous contents (\textit{ClearCurrentSheet}). Then, data identifiers are loaded from the user-provided file with IDs (\textit{getIDs}). After that, the same is being done with datatypes (\textit{getDatatypes}). Having received all the required input data, some calculations are being carried out (\textit{doCalculations}), which are there to estimate the optimal number of identifiers for a single request to Datastream. This is necessary, because Datastream has a maximum request size, both by number of submitted IDs and by the amount of data downloaded. Make sure you fully understand the calculations before making changes to this function. It is the likely the most complex one in the entire program. \\
+
+As the next step, the request table gets filled with contents. For this purpose, first the function \textit{fillTableIDs}, and then \textit{fillTableFields} is executed. \\
+
+After all these steps have been carried out, the actual download of the data starts. It is initiated in the main function \textit{getTSData} for each of the parts that need to be downloaded. A single request is being handled by the function \textit{request}. This is the only place in the code, where the call to the actual Datastream API happens via the provided interface function \textit{btnProcessTable\_Click}. The function itself can be found in the \textit{basEvents} module, which is always available in a Datastream request table by default. \\
+
+In terms of additional functionality, the tool provides logging throughout the code to enable troubleshooting when needed. The logs are stored in the \textit{Logs} folder of the tool. 
 
 \subsection{Python Part}
 
 
+%\input{chapters/AppendixDoFiles}
 
-
-\input{chapters/AppendixCode}
+\input{chapters/AppendixRegression}
 
 
 
