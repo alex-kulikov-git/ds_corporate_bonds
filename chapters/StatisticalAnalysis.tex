@@ -1,10 +1,10 @@
 \chapter{Statistical Analysis} \label{chapter:statistical-analysis}
 Having prepared the bond data and matched it with the stocks, some statistical analysis can now be performed. In particular, we are interested in summary statistics of corporate bond returns, as well as in the analysis of the lead-lag relationship of corporate bond and stock returns. For this, the returns themselves need to be calculated from daily prices first. Additionally, as the matching has so far only been done for static data, it needs to be extended to historical return data as well. All in all, the following procedure for the statistical analysis arises: 
 \begin{enumerate}
-	\item Calculate monthly bond returns
-	\item Match bond and equity returns
-	\item Calculate summary statistics
-	\item Analyse lead-lag relationship
+	\item calculate monthly bond returns
+	\item match bond and equity returns
+	\item calculate summary statistics
+	\item analyze lead-lag relationship
 \end{enumerate}
 
 \section{Monthly Bond Returns}
@@ -72,13 +72,20 @@ All regression analyses have been run as a duo of:
 	\item regression with monthly stock returns as dependent variable and 1-month lagged bond returns as independent variable
 \end{enumerate}
 
-
+For shortness, not all the regression results will be introduced here in detail. This section will mostly focus on high yield bonds, as these have shown the most likely lead correlation with equities in section \ref{section:summary-statistics}, and also because the leads and lags of high yield bonds have seen the highest attention in the existing literature on this subject so far. All the other regression results can be found either in the appendix to this work, or as part of the project files. %TODO ref regressions appendix
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[trim={0 16cm 0 0},clip,width=1.0\linewidth]{figures/summary-stats-by-rating.pdf}
-	\caption{Monthly Return Statistics by Bond Rating}
-	\label{fig:test}
+	\includegraphics[trim={0 0 0 0},clip,width=1.0\linewidth]{figures/regression-results/regression-high-yield-ccc-d-moodies-bonds-as-dependent.PNG}
+	\caption{Results: regression with high-yield corporate bonds (as by Moody's) as dependent variable, and stocks as independent variable}
+	\label{fig:regression-high-yield-ccc-d-moodies-bonds-as-dependent.PNG}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[trim={0 0 0 0},clip,width=1.0\linewidth]{figures/regression-results/regression-high-yield-ccc-d-moodies-stocks-as-dependent.PNG}
+	\caption{Results: regression with high-yield corporate bonds (as by Moody's) as independent variable, and stocks as dependent variable}
+	\label{fig:regression-high-yield-ccc-d-moodies-stocks-as-dependent.PNG}
 \end{figure}
 
 
