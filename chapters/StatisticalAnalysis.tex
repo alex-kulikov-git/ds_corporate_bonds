@@ -91,7 +91,7 @@ Fig. \ref{fig:regression-high-yield-ccc-d-moodies-bonds-as-dependent.PNG} featur
 	\item The \textit{t-values} signify the importance of the variable in the regression model. An absolute \textit{t-value} greater than 1.96 is usually considered as good, which is here the case for the steepness coefficient.  
 	\item The \textit{two-tail p-value} (here \textit{P $>$ $|t|$})is lower than 0.05 for the growth coefficient, which means that it is statistically significant. The value for the intercept is not very significant at 0.231. 
 \end{itemize}
-Overall, the results seem to show an existing lead relationship of corporate bond returns as compared to equity returns, though the results are not entirely conclusive. My recommendation is to use a more sophisticated (e.g. portfolio-based) regression procedure, and potentially to also try using a non-linear regression model to receive more reliant results. 
+Overall, the results show that stock returns lead the returns of high yield bonds on a 1-month basis, though the results are not entirely conclusive. My recommendation is to use a more sophisticated (e.g. portfolio-based) regression procedure, and potentially to also try using a non-linear regression model to receive more reliant results. 
 
 \begin{figure}[h]
 	\centering
@@ -100,10 +100,9 @@ Overall, the results seem to show an existing lead relationship of corporate bon
 	\label{fig:regression-high-yield-ccc-d-moodies-stocks-as-dependent.PNG}
 \end{figure}
 
-Fig. \ref{fig:regression-high-yield-ccc-d-moodies-stocks-as-dependent.PNG} shows the regression results for high-yield corporate bond return as independent variable, and stock return as dependent variable. The same definition of 'high-yield' applies as for the first regression. 
+Fig. \ref{fig:regression-high-yield-ccc-d-moodies-stocks-as-dependent.PNG} shows the regression results for high-yield corporate bond return as independent variable, and stock return as dependent variable. The same definition of 'high-yield' applies as for the first regression. Compared to regression results with bonds as dependent variable, the results with stocks as dependent variable are somewhat less significant, as can be seen e.g. by looking at the p-value an the two-tailed p-values. The model function fit is also somewhat worse when looking at the model sum of squares compared to the total sum of squares, as well as based on the $r^2$ parameter and the standard deviation of the model. Based on the t-values and the two-tail p-values, the results are statistically significant for the growth coefficient, but not so for the intercept. The model function itself is shaped as $stock\_return_{n} = -0.0013 + 0.2345 * bond\_return_{n-1}$, with $n$ being the month like before. 
 
-
-
+As the results of the second regression model are not as reliable and significant as those of the first one, it can be concluded that stocks are faster in incorporating significant market information than high-yield bonds, for one and the same company. However, due to the chosen procedure being very basic, it is advisable to conduct a more thorough regression analysis to draw up more reliable conclusions. 
 
 
 %TODO ratings generation
