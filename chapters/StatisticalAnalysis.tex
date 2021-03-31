@@ -20,16 +20,53 @@ To match the bond and equity returns with each other, we can make use of the mat
 	\caption{Matching of Bond and Equity Returns}
 	\label{fig:matching-returns}
 \end{figure}
-After that, the resulting dataset has to be merged with the provided stock time series data, which also includes the required monthly stock returns. This merge should take place over the two parameters $stock_dscd$ and $month$. This is because we want the bond and stock returns to be comparable for one and the same month later on. When executing the merges in Stata, keep in mind to make sure that the Datastream code parameter is named the same in the bond dataset and the matching (i.e. $bond_dscd$), and similarly for the stocks and the matching (i.e. $stock_dscd$). Otherwise, the matching will fail. The bonds-matching merge is performed on a M-to-1 relation, because multiple bonds can be mapped to the same equity over the issuing company. The merge with the equities is performed on a M-to-1 relation as well for the same reason. The resulting database builds the foundation for further statistical analysis. 
+After that, the resulting dataset has to be merged with the provided stock time series data, which also includes the required monthly stock returns. This merge should take place over the two parameters $stock\_dscd$ and $month$. This is because we want the bond and stock returns to be comparable for one and the same month later on. When executing the merges in Stata, keep in mind to make sure that the Datastream code parameter is named the same in the bond dataset and the matching (i.e. $bond\_dscd$), and similarly for the stocks and the matching (i.e. $stock\_dscd$). Otherwise, the matching will fail. The bonds-matching merge is performed on a M-to-1 relation, because multiple bonds can be mapped to the same equity over the issuing company. The merge with the equities is performed on a M-to-1 relation as well for the same reason. The resulting database builds the foundation for further statistical analysis. 
 
 \section{Summary Statistics} \label{section:summary-statistics}
+Stata offers very useful tools to determine the underlying distribution of the data, as well as to perform correlation and regression calculations. In order to obtain summary statistics separately for different bond groups, I split the bond returns dataset by geography and by credit rating. 
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[trim={0 15.5cm 0 0},clip,width=1.0\linewidth]{figures/summary-stats-by-geo.pdf}
+	\caption{Monthly Return Statistics by Bond Geography}
+	\label{fig:summary-stats-by-geo}
+\end{figure}
 
+Fig. \ref{fig:summary-stats-by-geo} features monthly return statistics for:
+\begin{itemize}
+	\item The entire world
+	\item North America region (NA), represented by USA and Canada
+	\item Western Europe region (EUW), represented by Germany, France, UK, Italy, Ireland, Luxembourg, Netherlands, Spain, Portugal, Belgium, Austria, Switzerland, and Scandinavian countries
+	\item Eastern Europe region (EUE), represented by Poland, Czech Republic, Bulgaria, Greece, Serbia, Croatia, Hungary, Montenegro, Ukraine, Turkey, and Georgia
+	\item South America region, represented by Brazil, Argentina, Chile, Colombia, Uruguay, Paraguay, Panama, Peru, and Mexico (though NA)
+	\item China 
+\end{itemize}
+Note that the list is neither regionally exhaustive, nor is it 100\% geographically accurate. Its sole purpose is to gain a general idea of the distribution of corporate bond returns for countries with a similar financial structure. 
+
+Fig. \ref{fig:summary-stats-by-rating} features monthly return statistics for different credit ratings of corporate bonds. Please note that the number of bond-month observations for the single credit ratings does not sum up to to the number in the \textit{All} column. This is due to the procedure which was used to split the bonds up by their rating. To give an example, bonds listed in rating category \textit{BBB} are those bonds which have either a \textit{BBB} rating as given by the S\&P agency, or a \textit{Baa} rating as given by the Moody's agency. In some cases, it occurs that e.g. the Moody's rating is given as \textit{A}, and the S\&P rating as \textit{BBB}. In this case, the bond would be listed in both the \textit{A} and the \textit{BBB} categories, which results in intersections between the single categories. The procedure has been chosen this way to receive a larger amount of data for analysis, as e.g. entries for the Moody's rating alone were somewhat scarce. If needed, further analysis can be done based on ratings of a single agency only. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[trim={0 16cm 0 0},clip,width=1.0\linewidth]{figures/summary-stats-by-rating.pdf}
+	\caption{Monthly Return Statistics by Bond Rating}
+	\label{fig:summary-stats-by-rating}
+\end{figure}
+
+The distribution mean and standard deviation of the bond returns are largely in-line with my expectations. Bonds in regions with a majority of developed countries generally have a higher mean return and a lower standard deviation than bonds in regions with more developing countries. Similarly, investment grade bonds have higher mean return and lower volatility than non-investment grade bonds. 
+
+The correlation with equity returns looks higher for developed regions, but at the same time lower for investment grade bonds. 
+Additionally, the correlation of monthly bond returns with lagged stock returns strictly monotonically increases with falling credit rating. As such, the lowest bond-lead correlation can be seen for corporate bonds rated \textit{AAA}, while the highest correlation is listed for \textit{CCC} rated bonds. This already explains quite well why existing research on the topic of the lead-lag relation of corporate bonds and stocks mostly focuses on high yield bonds, as these have the highest lead correlation with stocks. The correlation results of stock returns with lagged bond returns are less conclusive, but tend to be higher for investment grade bonds. From a geographical point of view, there seems to be no significant insight for the lead and lag correlations with equity returns. 
 
 \section{Lead-Lag Relationship} \label{section:lead-lag-relationship}
 
 
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[trim={0 16cm 0 0},clip,width=1.0\linewidth]{figures/summary-stats-by-rating.pdf}
+	\caption{Monthly Return Statistics by Bond Rating}
+	\label{fig:test}
+\end{figure}
 
 
 
@@ -37,4 +74,5 @@ After that, the resulting dataset has to be merged with the provided stock time 
 
 
 
+%TODO ratings generation
 
