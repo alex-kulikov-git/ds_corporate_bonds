@@ -59,6 +59,137 @@ You can start the Datastream Extraction Tool by running the file \textbf{\textit
 
 If you encounter a problem, some other prerequisites on your computer might be missing that might not have been covered in this guide. In that case, please contact the project developer. 
 
+\subsection{User Interface}
+Once you start the application, the user interface (in the following gui) as in Fig. \ref{fig:gui-2} will show. It has the sections: 
+\begin{itemize}
+	\item Request Type
+	\item Time Frames
+	\item Request Datatypes
+	\item Data IDs
+	\item Request Format
+	\item Save Results To
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.1\linewidth]{figures/gui.png}
+	\caption{Graphical User Interface of the Datastream Extraction Tool}
+	\label{fig:gui-2}
+\end{figure}
+
+In the \textbf{Request Type} section you can select your request to encompass either static or time-series data for the stocks or bonds that you want to download. \\
+
+If you select the option \textit{Time Series}, the \textbf{Time Frames} section will become enabled. There, you can enter the start and the end date of the period for which you want to download data. The dates have to be entered in the format "dd/mm/yy" (e.g. 01/01/99 for the 1st of January 1999, or 30/06/20 for the 30th of June 2020). The program assigns year numbers from 51 to 99 automatically to the years 1951 - 1999, and year numbers from 00 to 50 to the years 2000 - 2050. 
+In the \textit{Frequency} text field, you can type in the frequency of the time points that you want to get. Here, the values "Daily", "Weekly", "Monthly", "Quarterly", and "Yearly" are allowed. \\
+
+Within the \textbf{Request Datatypes} section, you can enter the codes of the parameter types that you want to get for your stocks or bonds. These could be e.g. "C" for coupon, or "ISIN". You can enter the values either manually, or by choosing the excel file from which you want to get the datatypes. If you choose to enter the datatype codes manually, please do so in a comma-separated manner (e.g. "C,ISIN,AIS,BSTAT"). If you choose to enter the codes via excel file, you have to create an excel file with all the datatype codes listed in column A, one below the other (see Fig. \ref{fig:file-datatypes}). Then, within the app, browse for the created file and select it.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.1\linewidth]{figures/enter-datatypes.png}
+	\caption{A sample file with datatypes}
+	\label{fig:file-datatypes}
+\end{figure}
+
+In the \textbf{Data IDs} section, you have to enter the datastream codes of the financial instruments - i.e. stocks or bonds - that you are interested in. Just like for datatypes, this can be done either manually, or by giving the excel file name, in which you have previously stored the IDs. When entering them manually, separate the IDs by commas again. When entering them via file, store them in the A column of your excel document, like before, and select the created file in the app by clicking on the "Browse" button. \\
+
+In the \textbf{Request Format} section you can (optionally) enter the format in which you want your data to appear. You can give the format by concatenating the letters of the different format options available in Datastream. For example, "CRM\$" would mean to include column headers (C), row headers (R), instrument code (M), and currency (\$). \\
+
+Finally, in the \textbf{Save Results To} section of the interface you can enter the folder location to which you want your request results to be saved. For this, either enter a valid folder path by hand, or select it by clicking on the button to browse for a suiting folder. \\
+
+Below the parameter sections, there is a \textbf{status bar} that shows you the current status of your request. This can be especially useful for longer requests. Please keep in mind that the status bar can have a delay of up to 2 minutes, depending on the current request phase. For real-time request updates, please refer to Logs in the Folder Structure section of this guide. \\
+
+Additionally, at the bottom of the gui, there are several control buttons. The "\textbf{Start Request}" button first checks the format of the fields you entered, and subsequently launches the request. The current status of the request will be shown in the status bar. \\
+
+
+The "\textbf{Stop Request}" button shuts down the request if there is one currently running. In its essence, it kills the running Excel instance to stop the data download. Depending on the phase of the request, it might take up to 2 minutes until the request has been stopped. Please abstain from using the gui during this time. \\
+
+
+The "\textbf{Resume Request}" button is there to resume a request that was previously started and then stopped. This action ignores any entered parameter fields, as it simply resumes the last request, with the settings it has internally saved. Requests that were resumed automatically continue to download data, starting from the last data chunk that has previously been downloaded. Use the "Resume Request" button if your download crushed or if you stopped it manually. \\
+
+
+The "\textbf{Open Request}" and "\textbf{Save Request}" buttons are there to either save current parameters into a file, or to conveniently load request parameters from a file. Use this for recurring requests to avoid entering them by hand each time. \\
+
+
+Finally, the "\textbf{Exit}" button first stops the request if there is one running, and then closes the application. If you want to close the application without stopping the request, close the window as usually with the cross at the top right of the window. Note that in this case Excel might proceed running in the background!
+
+\subsection{Application Folders}
+The application is shipped with several folders that it requires to run. These are: 
+
+\begin{itemize}
+	\item Data
+	\item DataTypes
+	\item IDs
+	\item Logs
+	\item PythonPackages
+	\item Requests
+	\item Settings
+\end{itemize}
+
+In \textbf{Data}, the downloaded data from the users' requests is getting stored. It is stored in the form of Excel files. The number of files varies depending on the request size. The file size is centered around 40 MB each, but can also vary, depending on the particular request and the available data. You can use the files with downloaded data for whichever purpose you want. It is advisable though to avoid further manipulating these files in-place, and rather to copy them elsewhere for further processing. \\
+
+In the \textbf{DataTypes} folder, you can put Excel files with the datatypes of financial instruments that you want to download. These have to be stored in column A, one datatype per row. The application is shipped with several examples. \\
+
+In \textbf{IDs}, you can put Excel files containing Datastream identifiers of financial instruments, for which you would like to download data. Just like for datatypes, you have to store these in the A column of the respective Excel file, one ID per row. Refer to section IDs Preparation for hints on how to do it conveniently. \\
+
+In the folder \textbf{Logs}, you will find two files, which are generated when the program is running. The first one is called \textit{log\_python.txt}. It contains real-time information on the progress of the data download. Use the file to either check the current download status, or to track occurring errors, should the application misbehave. The second file is called \textit{log\_request\_table.txt}. It contains real-time information on the progress of the data download on the Excel side of the program (i.e in the request table). You can similarly use it either for progress updates, or for troubleshooting. \\
+
+The folder \textbf{PythonPackages} is of technical nature. It contains python packages that are needed for the application to run. Please, do not touch this folder, unless you know what you are doing. \\
+
+In the folder \textbf{Requests}, you can store parameters of previous requests, in order to reuse these later. The requests are stored .txt files. The file names you can choose yourself at creation. \\
+
+The folder \textbf{Setting}s contains one single file called \textit{settings.txt}. This file is used for multiple purposes, including: 
+
+\begin{itemize}
+	\item communication between the python and the excel part of the application
+	\item download progress monitoring
+	\item error monitoring
+	\item status updates in the gui
+	\item the "resume request" functionality
+\end{itemize}
+The settings and communication data within the file is stored in the key-value-format. In most cases, you should \textbf{not} open or modify the file. For exceptions, refer to the Troubleshooting section. 
+
+\subsection{Troubleshooting}
+
+\subsubsection{3.3.1 Thomson Reuters Eikon add-in does not show in the list of active Excel add-ins}
+\textbf{Problem Description: }  \\
+Thomson Reuters Eikon add-in does not show in the list of active Excel add-ins. \\ \\
+\textbf{Solution Proposal:} \\
+In the \textit{RequestTable.xlsm} document, navigate to File $ => $ Options $ => $ Add-ins. If the add-in is listed under "Deactivated Application Add-ins" in the Add-ins tab of Options, then at the bottom select \textit{Manage: Deactivated elements} and click on "Go". In the appearing window, if the Thomson Reuters add-in is listed, check it and click on "Activate". \\
+If the Reuters add-in is listed under "Inactive Application Add-ins" instead, then at the bottom select \textit{Manage: COM Add-ins} and click "Go". In the appearing window, if \textit{Thomson Reuters Eikon - Microsoft Office} is not checked, check it. If the Reuters add-in is not in the list, click on "Add" and navigate to the add-in location. In many cases, it is stored under 
+\url{C:\\Users\\[current_user]\\AppData\\Local\\ThomsonReuters\\Eikon\\EikonOfficeShim.dll}. 
+Select it and add it to the list. If not, find out where the file \textit{EikonOfficeShim.dll} is stored on your computer and add it to the list of add-ins. 
+
+\subsubsection{3.3.2 Sign-In Problems with Thomson Reuters Eikon Add-in}
+\textbf{Problem Description: }  \\
+The Excel add-in of Thomson Reuters Eikon \& Datastream sometimes logs-out for unclear reasons, or because a different user logged-in with the same account data. In most cases, this results in an Excel message during download, which states that the user is not signed-in to Thomson Reuters. \\ \\
+\textbf{Solution Proposal:} \\
+Sign-in to Thomson Reuters manually in Excel. Then restart or resume the download. If this does not solve the issue, try restarting Windows. 
+
+\subsubsection{3.3.3 Download Problems}
+\textbf{Problem Description: }  \\
+One of the following hanging problems applies: 
+\begin{itemize}
+	\item The download seems to hang, but the app does not recognize it. 
+	\item The app recognized the hanging, but cannot shut down the download. 
+	\item The app shut down the download due to hanging, but Excel keeps running. 
+	\item You stopped the request manually, but it seems to still be running. 
+	Neither the app, nor Excel respond, or the entire computer seems to hang. 
+\end{itemize} 
+\textbf{Solution Proposal:} \\
+Open Task Manager. Kill the Excel task first, then the extraction tool. The extraction tool will be shown as "Python" in the task list. Then restart the extraction tool and resume the download. 
+
+\section{Technical Aspects}
+In this section, a technical description of the application architecture will be provided. 
+
+\subsection{Excel / VBA Part}
+
+
+
+\subsection{Python Part}
+
+
+
 
 \input{chapters/AppendixCode}
 
