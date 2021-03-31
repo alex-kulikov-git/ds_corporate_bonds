@@ -81,7 +81,17 @@ For shortness, not all the regression results will be introduced here in detail.
 	\label{fig:regression-high-yield-ccc-d-moodies-bonds-as-dependent.PNG}
 \end{figure}
 
-Fig. \ref{fig:regression-high-yield-ccc-d-moodies-bonds-as-dependent.PNG} features the regression results for high-yield corporate bond return as dependent variable, and stock return as independent variable. Specifically, high-yield bonds have been taken as those with either a \textit{Ca} or a \textit{C} current rating provided by Moody's. 
+Fig. \ref{fig:regression-high-yield-ccc-d-moodies-bonds-as-dependent.PNG} features the regression results for high-yield corporate bond return as dependent variable, and stock return as independent variable. Specifically, high-yield bonds have been taken as those with either a \textit{Ca} or a \textit{C} current rating provided by Moody's. From a statistical perspective, the following interpretation of the results can be given: 
+\begin{itemize}
+	\item The \textit{model sum of squares} (\textit{MSS}) is not very close to the \textit{total sum of squares} (\textit{TSS}), which means that the fit of the model function is not very tight. 
+	\item The \textit{p-value} (here \textit{Prob $>$ F}) is noticeably lower than 0.05. This means that the results of the regression are statistically significant. 
+	\item The $r^2$ is the amount of variance of bond returns that is explained by the lagged equity returns. The number is rather low, though it is the highest achieved in all the regression analyses run. Apparently, equities are best in explaining the variance of high-yield bonds, compared to other bond groups.
+	\item The \textit{root mean-squared-error} is the standard deviation of the regression model. It is close to 0, which means that the single bond return values do not deviate much from the distribution mean on average. On the other hand, the bond returns themselves are not very high, so even an absolutely small standard deviation can have a significant impact on the spread. 
+	\item The modeled regression function itself has the shape $bond\_return_{n} = -0.0013 + 0.0584 * stock\_return_{n-1}$, with $n$ being the month, at the end of which the return occurred. The magnitude of the steepness factor and the intercept seems in-line with existing literature on the subject. 
+	\item The \textit{t-values} signify the importance of the variable in the regression model. An absolute \textit{t-value} greater than 1.96 is usually considered as good, which is here the case for the steepness coefficient.  
+	\item The \textit{two-tail p-value} (here \textit{P $>$ $|t|$})is lower than 0.05 for the growth coefficient, which means that it is statistically significant. The value for the intercept is not very significant at 0.231. 
+\end{itemize}
+Overall, the results seem to show an existing lead relationship of corporate bond returns as compared to equity returns, though the results are not entirely conclusive. My recommendation is to use a more sophisticated (e.g. portfolio-based) regression procedure, and potentially to also try using a non-linear regression model to receive more reliant results. 
 
 \begin{figure}[h]
 	\centering
