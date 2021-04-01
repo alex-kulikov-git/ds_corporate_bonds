@@ -9,7 +9,7 @@ The Datastream Extraction Tool is an application that allows the user to downloa
 \section{Installation}
 Please, be aware of the following: 
 \begin{itemize}
-	\item The application can only be run on Windows computers. It cannot be ported to MacOS or Linux, as the Thomson Reuters Excel add-in is only available for Windows, and also because the VBA (Visual Basic for Applications) version on Unix-based computers is a different one than on Windows computers. 
+	\item The application can only be run on Windows computers. It cannot be ported to Mac-OS or Linux, as the Thomson Reuters Excel add-in is only available for Windows, and also because the VBA (Visual Basic for Applications) version on Unix-based computers is a different one than on Windows computers. 
 	\item While the application can generally be run on remote computers as well, it can be rather inconvenient. On the one hand, remote computers tend to be less stable in terms of internet connection and add-in connectivity. And additionally, the remote computers of TUM-SOM have rather poor performance (especially disk access!), which would constrain the data download. Furthermore, remote computers automatically shut down after some time, which makes downloading large data loads problematic. For smaller requests though, that take up to 1 hour of download time, the remote execution should suffice. 
 \end{itemize}
 
@@ -46,7 +46,7 @@ Further, take care of the following settings:
 		\item Add-ins $ => $ uncheck all boxes.
 		\item External Content $ => $ select "\textit{Enable all Data Connections}", "\textit{Enable automatic update for all Workbook Links}", "\textit{Enable all Linked Data Types}".
 	\end{itemize}
-	\item Go to File $ => $ Options $ =>  $Customize Ribbon $ => $ select \textit{Main Tabs} on the right $ => $ check the \textit{Developer, Add-ins, Thomson Reuters}, and \textit{Thomson Reuters Datastream} tabs. 
+	\item Go to File $ => $ Options $ => $ Customize Ribbon $ => $ select \textit{Main Tabs} on the right $ => $ check the \textit{Developer, Add-ins, Thomson Reuters}, and \textit{Thomson Reuters Datastream} tabs. 
 	\item Go to File $ => $ Options $ => $ Advanced $ => $ section \textit{General} $ => $ uncheck option \textit{Ask to update automatic links}. 
 	\item Go to File $ => $ Options $ => $ Add-ins and make sure that the add-in \textit{Thomson Reuters Eikon - Microsoft Office }is listed among \textit{Active Application Add-ins}. It should be. If not, refer to the Troubleshooting section. 
 	\item Press "Alt + F11" (the VBA editor will appear) $ => $ go to Tools $ => $ References $ => $ check the box near "\textit{Microsoft Scripting Runtime}"
@@ -136,9 +136,9 @@ In the folder \textbf{Logs}, you will find two files, which are generated when t
 
 The folder \textbf{PythonPackages} is of technical nature. It contains python packages that are needed for the application to run. Please, do not touch this folder, unless you know what you are doing. \\
 
-In the folder \textbf{Requests}, you can store parameters of previous requests, in order to reuse these later. The requests are stored .txt files. The file names you can choose yourself at creation. \\
+In the folder \textbf{Requests}, you can store parameters of previous requests, in order to reuse these later. The requests are stored as .txt files. The file names you can choose yourself at creation. \\
 
-The folder \textbf{Setting}s contains one single file called \textit{settings.txt}. This file is used for multiple purposes, including: 
+The folder \textbf{Settings} contains one single file called \textit{settings.txt}. This file is used for multiple purposes, including: 
 
 \begin{itemize}
 	\item communication between the python and the excel part of the application
@@ -157,7 +157,7 @@ Thomson Reuters Eikon add-in does not show in the list of active Excel add-ins. 
 \textbf{Solution Proposal:} \\
 In the \textit{RequestTable.xlsm} document, navigate to File $ => $ Options $ => $ Add-ins. If the add-in is listed under "Deactivated Application Add-ins" in the Add-ins tab of Options, then at the bottom select \textit{Manage: Deactivated elements} and click on "Go". In the appearing window, if the Thomson Reuters add-in is listed, check it and click on "Activate". \\
 If the Reuters add-in is listed under "Inactive Application Add-ins" instead, then at the bottom select \textit{Manage: COM Add-ins} and click "Go". In the appearing window, if \textit{Thomson Reuters Eikon - Microsoft Office} is not checked, check it. If the Reuters add-in is not in the list, click on "Add" and navigate to the add-in location. In many cases, it is stored under 
-\url{C:\\Users\\[current_user]\\AppData\\Local\\ThomsonReuters\\Eikon\\EikonOfficeShim.dll}. 
+\url{C:\\Users\\[current_user]\\AppData\\Local\\ThomsonReuters\\Eikon\\} \\ \url{EikonOfficeShim.dll}. 
 Select it and add it to the list. If not, find out where the file \textit{EikonOfficeShim.dll} is stored on your computer and add it to the list of add-ins. 
 
 \subsubsection{3.3.2 Sign-In Problems with Thomson Reuters Eikon Add-in}
@@ -229,14 +229,14 @@ After all these steps have been carried out, the actual download of the data sta
 In terms of additional functionality, the tool provides logging throughout the code to enable troubleshooting when needed. The logs are stored in the \textit{Logs} folder of the tool. 
 
 \subsection{Python Part} 
-In order to fully understand the architecture of the Python side of the application, take a look at Fig. \ref{fig:ds-extraction-tool-arch} again. The main point of entry into the user-side application is the user interface (gui). It runs on the main thread of the program, and is maintained by the module called \textit{ds\_extraction\_tool}. The user interface has been created with the package \textit{Tkinter}. %TODO ref Tkinter package
+In order to fully understand the architecture of the Python side of the application, take a look at Fig. \ref{fig:ds-extraction-tool-arch} again. The main point of entry into the user-side application is the user interface (gui). It runs on the main thread of the program, and is maintained by the module called \textit{ds\_extraction\_tool}. The user interface has been created with the package \textit{Tkinter}. 
 It provides a way to relatively fast create user interfaces, even though they are not very flexible in terms of appearance. Most of the \textit{ds\_extraction\_tool} module deals with gui elements and user interaction with them. \\
 
 The most interesting functions are start\_\textit{request}, \textit{resume\_request} and \textit{stop\_request}. start\_\textit{request} and \textit{resume\_request} both put user-defined request settings, which were previously entered by the user in the user interface, into the \textit{settings.txt} file, which in its turn is used to communicate with the VBA part of the program. The settings file on the Python file is wrapped into a key-value dictionary, similarly to the way it is done in VBA. The dictionary implementation is self-made and can be found in the module \textit{kv\_file\_manager}.  \\
 
 After filling the settings file with user contents, a new thread (Thread 2) gets started, in which the module \textit{excel\_controller} runs. The module is responsible for starting up Excel, and for submitting the actual download request to VBA. A new thread is needed in order to keep the gui responsive throughout the download. Additionally, the module performs error monitoring and progress control at runtime. This is the most complex module on the Python side of the program. Take some time to familiarize yourself with it. The module receives the call from \textit{ds\_extraction\_tool} which lands in the \textit{start} function. The \textit{start} function, in its turn, calls the \textit{run} function. The \textit{run} function creates a new thread (Thread 3), in which Excel is started, the request table opened, and the VBA macro \textit{getTSData} launched. In order to submit all this to Thread 3, this functionality needs to be wrapped in a non-class function called \textit{run\_rt}, also available in the module. \\
 
-After the VBA macro and thus the download have been launched, the module \textit{excel\_controller} keeps monitoring the execution by regularly checking the contents of the \textit{settings.txt} file. This is done by the two boolean functions \textit{finished\_request} and \textit{download\_hangs}. If the module notices that the download has finished (by comparing currently downloaded data part with total number of parts in the settings file), it stops the execution and issues a message to the user that the download has completed. If it notices that the download is likely hanging (by reaching a counter timeout on the same data part being downloaded for a long time), Excel, and thus the running macro, gets killed so that the hanging download can be stopped. This is handled by the module \textit{excel\_killer}. The process responsible for stopping Excel also runs on a separate thread (Thread 4), in order to prevent interference with the \textit{excel\_controller} module and the gui. After that, Excel gets restarted, the request table reopened, and the download resumed at the same download stage where it was interrupted. \\
+After the VBA macro and thus the download have been launched, the module \textit{excel\_ \\ controller} keeps monitoring the execution by regularly checking the contents of the \textit{settings.txt} file. This is done by the two boolean functions \textit{finished\_request} and \textit{download\_hangs}. If the module notices that the download has finished (by comparing currently downloaded data part with total number of parts in the settings file), it stops the execution and issues a message to the user that the download has completed. If it notices that the download is likely hanging (by reaching a counter timeout on the same data part being downloaded for a long time), Excel, and thus the running macro, gets killed so that the hanging download can be stopped. This is handled by the module \textit{excel\_killer}. The process responsible for stopping Excel also runs on a separate thread (Thread 4), in order to prevent interference with the \textit{excel\_controller} module and the gui. After that, Excel gets restarted, the request table reopened, and the download resumed at the same download stage where it was interrupted. \\
 
 Additionally, the Python side of the application also writes a log, which can be found in the \textit{Logs} folder of the application, and delivers download status updates to the gui module to notify the user of what is currently happening. The latter is done over the object called \textit{obj\_update}, which is reached over to the \textit{excel\_controller} module by the gui when the user request is being forwarded to Thread 2. \\
 
