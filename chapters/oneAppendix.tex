@@ -179,7 +179,7 @@ One of the following hanging problems applies:
 \textbf{Solution Proposal:} \\
 Open Task Manager. Kill the Excel task first, then the extraction tool. The extraction tool will be shown as "Python" in the task list. Then restart the extraction tool and resume the download. 
 
-\section{Technical Aspects}
+\section{Technical Aspects} \label{appendix:technical-aspects}
 In this section, a technical description of the application architecture will be provided. For an illustration of the entire architecture, see Fig. \ref{fig:ds-extraction-tool-arch}. 
 \begin{figure}[h]
 	\centering
@@ -228,7 +228,7 @@ After all these steps have been carried out, the actual download of the data sta
 
 In terms of additional functionality, the tool provides logging throughout the code to enable troubleshooting when needed. The logs are stored in the \textit{Logs} folder of the tool. 
 
-\subsection{Python Part}
+\subsection{Python Part} 
 In order to fully understand the architecture of the Python side of the application, take a look at Fig. \ref{fig:ds-extraction-tool-arch} again. The main point of entry into the user-side application is the user interface (gui). It runs on the main thread of the program, and is maintained by the module called \textit{ds\_extraction\_tool}. The user interface has been created with the package \textit{Tkinter}. %TODO ref Tkinter package
 It provides a way to relatively fast create user interfaces, even though they are not very flexible in terms of appearance. Most of the \textit{ds\_extraction\_tool} module deals with gui elements and user interaction with them. \\
 
