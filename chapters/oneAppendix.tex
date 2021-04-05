@@ -79,7 +79,8 @@ Once you start the application, the user interface (in the following gui) as in 
 
 In the \textbf{Request Type} section you can select your request to encompass either static or time-series data for the stocks or bonds that you want to download. \\
 
-If you select the option \textit{Time Series}, the \textbf{Time Frames} section will become enabled. There, you can enter the start and the end date of the period for which you want to download data. The dates have to be entered in the format "dd/mm/yy" (e.g. 01/01/99 for the 1st of January 1999, or 30/06/20 for the 30th of June 2020). The program assigns year numbers from 51 to 99 automatically to the years 1951 - 1999, and year numbers from 00 to 50 to the years 2000 - 2050. 
+If you select the option \textit{Time Series}, the \textbf{Time Frames} section will become enabled. There, you can enter the start and the end date of the period for which you want to download data. The dates have to be entered in the format "dd/mm/yy" (e.g. 01/01/99 for the 1st of January 1999, or 30/06/20 for the 30th of June 2020). The program assigns year numbers from 51 to 99 automatically to the years 1951 - 1999, and year numbers from 00 to 50 to the years 2000 - 2050. Alternatively, the dates can also be entered in the format "dd/mm/yyyy", with the year stated precisely as e.g. 1980 or 2021.
+
 In the \textit{Frequency} text field, you can type in the frequency of the time points that you want to get. Here, the values "Daily", "Weekly", "Monthly", "Quarterly", and "Yearly" are allowed. \\
 
 Within the \textbf{Request Datatypes} section, you can enter the codes of the parameter types that you want to get for your stocks or bonds. These could be e.g. "C" for coupon, or "ISIN". You can enter the values either manually, or by choosing the excel file from which you want to get the datatypes. If you choose to enter the datatype codes manually, please do so in a comma-separated manner (e.g. "C,ISIN,AIS,BSTAT"). If you choose to enter the codes via excel file, you have to create an excel file with all the datatype codes listed in column A, one below the other (see Fig. \ref{fig:file-datatypes}). Then, within the app, browse for the created file and select it.
@@ -162,11 +163,17 @@ Select it and add it to the list. If not, find out where the file \textit{EikonO
 
 \subsubsection{3.3.2 Sign-In Problems with Thomson Reuters Eikon Add-in}
 \textbf{Problem Description: }  \\
-The Excel add-in of Thomson Reuters Eikon \& Datastream sometimes logs-out for unclear reasons, or because a different user logged-in with the same account data. In most cases, this results in an Excel message during download, which states that the user is not signed-in to Thomson Reuters. \\ \\
+The Excel add-in of Thomson Reuters Eikon \& Datastream sometimes logs-out for unclear reasons, or because a different user logged-in with the same account data. Sometimes, the reconnect can be achieved programmatically. In other cases, this results in an Excel message during download, which states that the user is not signed-in to Thomson Reuters.  \\ \\
 \textbf{Solution Proposal:} \\
 Sign-in to Thomson Reuters manually in Excel. Then restart or resume the download. If this does not solve the issue, try restarting Windows. 
 
-\subsubsection{3.3.3 Download Problems}
+\subsubsection{3.3.3 Connection Problems with Thomson Reuters Eikon Add-in}
+\textbf{Problem Description: }  \\
+The Excel add-in of Thomson Reuters Eikon \& Datastream can sometimes become \textbf{disabled} after MS Excel has placed it in a blacklist due to "bad" behavior. While in most cases this is resolved automatically by some code I created, sometimes it misbehaves due to an internal library bug. In that case, you will receive an error message stating "The Thomson Reuters add-in could not be connected automatically. Please go to "Disabled Add-Ins" section in Excel Options and enable the Refinitiv add-in manually. Then try again. " \\ \\
+\textbf{Solution Proposal:} \\
+Follow the instructions to re-enable the Refinitiv Eikon add-in manually. For this, navigate to File $ => $ Options $ => $ Add-ins $  => $ Manage: Disabled Items $ => $ Go... $ => $ Select the Thomson Reuters Refinitiv add-in $ => $ Enable $ => $ Close $ => $ OK. 
+
+\subsubsection{3.3.4 Download Problems}
 \textbf{Problem Description: }  \\
 One of the following hanging problems applies: 
 \begin{itemize}
@@ -196,14 +203,12 @@ The Visual Basic for Applications part of the data extraction tool consists of f
 	\item modUtils
 	\item modTS
 \end{itemize}
-Within \textit{modDeclares}, operating system level constants and functions are defined. The declaration of such functions with \textit{Declare} and of constants with \textit{Const} equals an import of this functionality to the project. If you are not familiar with the reasoning behind the usage of \textit{PtrSafe} and \textit{LongPtr} keywords, you can read it up here: .  \\ %TODO
-%https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/ptrsafe-keyword
-%https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/longptr-data-type
+Within \textit{modDeclares}, operating system level constants and functions are defined. The declaration of such functions with \textit{Declare} and of constants with \textit{Const} equals an import of this functionality to the project. If you are not familiar with the reasoning behind the usage of \textit{PtrSafe} and \textit{LongPtr} keywords, you can read it up here: \cite{ptrsafe, longptr}.  \\ 
 
 The module \textit{modVariables} simply contains all the global variables used within the project, split by their usage area as described in the annotations. \\
 
 In \textit{modUtils}, a large amount of helper functions are defined. About half of them are self-written, the others come from solutions available online. While I cannot guarantee for all of them to always work correctly, it is unlikely for them to contain bugs, since I extensively tested most of them in different contexts. 
-The most important functions are the ones I wrote to wrap the communication with the \textit{settings.txt} file (InitDict, GetFromDict, UpdateDict, PutKV, and GetKV), and those responsible for the Datastream Add-In connection (Connect\_COM\_AddIn, InstallCOMAddIn, iAddInStatus, CheckPluginConnection). Make sure to familiarize yourself with them if you are going to make changes or extensions to the tool. \\
+The most important functions are the ones I wrote to wrap the communication with the \textit{settings.txt} file (InitDict, GetFromDict, UpdateDict, PutKV, and GetKV), and those responsible for the Datastream Add-In connection (Connect\_COM\_AddIn, iAddInStatus, CheckPluginConnection). Make sure to familiarize yourself with them if you are going to make changes or extensions to the tool. \\
 
 The module \textit{modTS} is the main module of the tool, in which most of the action happens. It is well-modularized by itself and contains the following functions: 
 \begin{itemize}
@@ -232,7 +237,7 @@ In terms of additional functionality, the tool provides logging throughout the c
 In order to fully understand the architecture of the Python side of the application, take a look at Fig. \ref{fig:ds-extraction-tool-arch} again. The main point of entry into the user-side application is the user interface (gui). It runs on the main thread of the program, and is maintained by the module called \textit{ds\_extraction\_tool}. The user interface has been created with the package \textit{Tkinter}. 
 It provides a way to relatively fast create user interfaces, even though they are not very flexible in terms of appearance. Most of the \textit{ds\_extraction\_tool} module deals with gui elements and user interaction with them. \\
 
-The most interesting functions are start\_\textit{request}, \textit{resume\_request} and \textit{stop\_request}. start\_\textit{request} and \textit{resume\_request} both put user-defined request settings, which were previously entered by the user in the user interface, into the \textit{settings.txt} file, which in its turn is used to communicate with the VBA part of the program. The settings file on the Python file is wrapped into a key-value dictionary, similarly to the way it is done in VBA. The dictionary implementation is self-made and can be found in the module \textit{kv\_file\_manager}.  \\
+The most interesting functions are \textit{start\_request}, \textit{resume\_request} and \textit{stop\_request}. start\_\textit{request} and \textit{resume\_request} both put user-defined request settings, which were previously entered by the user in the user interface, into the \textit{settings.txt} file, which in its turn is used to communicate with the VBA part of the program. The settings file on the Python file is wrapped into a key-value dictionary, similarly to the way it is done in VBA. The dictionary implementation is self-made and can be found in the module \textit{kv\_file\_manager}.  \\
 
 After filling the settings file with user contents, a new thread (Thread 2) gets started, in which the module \textit{excel\_controller} runs. The module is responsible for starting up Excel, and for submitting the actual download request to VBA. A new thread is needed in order to keep the gui responsive throughout the download. Additionally, the module performs error monitoring and progress control at runtime. This is the most complex module on the Python side of the program. Take some time to familiarize yourself with it. The module receives the call from \textit{ds\_extraction\_tool} which lands in the \textit{start} function. The \textit{start} function, in its turn, calls the \textit{run} function. The \textit{run} function creates a new thread (Thread 3), in which Excel is started, the request table opened, and the VBA macro \textit{getTSData} launched. In order to submit all this to Thread 3, this functionality needs to be wrapped in a non-class function called \textit{run\_rt}, also available in the module. \\
 
@@ -240,7 +245,7 @@ After the VBA macro and thus the download have been launched, the module \textit
 
 Additionally, the Python side of the application also writes a log, which can be found in the \textit{Logs} folder of the application, and delivers download status updates to the gui module to notify the user of what is currently happening. The latter is done over the object called \textit{obj\_update}, which is reached over to the \textit{excel\_controller} module by the gui when the user request is being forwarded to Thread 2. \\
 
-The module \textit{variables} stores all the global variables utilized on the Python side. The module \textit{registry\_killer} is there to kill a registry entry Excel keeps settings when the Datastream add-in misbehaves. If the entry is not deleted at each program start, it might be that the Datastream add-in is blacklisted by Excel, and thus cannot start. The functionality is essential for the tool to work reliable. Finally, the module \textit{log\_file\_manager} is responsible for writing the log file. 
+The module \textit{variables} stores all the global variables utilized on the Python side. The module \textit{registry\_killer} is there to kill a registry entry Excel keeps settings when the Datastream add-in misbehaves. If the entry is not deleted at each program start, it might be that the Datastream add-in is blacklisted by Excel, and thus cannot start. The functionality is essential for the tool to work reliably. Finally, the module \textit{log\_file\_manager} is responsible for writing the log file. 
 
 %\input{chapters/AppendixDoFiles}
 
